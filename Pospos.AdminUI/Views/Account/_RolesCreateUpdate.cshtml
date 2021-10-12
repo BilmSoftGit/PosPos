@@ -1,0 +1,68 @@
+﻿@model Pospos.AdminUI.Models.CreateUpdateRolesModalPopupViewModel
+<div class="card card-primary">
+    @*<div class="card-header">
+            <h3 class="card-title">Kullanıcı Şifresi Resetleme</h3>
+        </div>*@
+    <form method="post" action="/change-password">
+        <input type="hidden" name="Id" value="@Model.Id" />
+        <div class="card-body">
+            <div class="form-group">
+                <label for="exampleInputEmail1">Rol Adı</label>
+                <input type="text" class="form-control" name="Name" id="Name" placeholder="Rol Adı" value="@Model.Name">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">Sistem Adı</label>
+                <input type="text" class="form-control" name="SystemName" id="SystemName" placeholder="Sistem Adı" value="@Model.SystemName">
+            </div>
+            <div class="form-group">
+                <div class="icheck-primary">
+                    <input type="checkbox" id="IsSystemRole" name="IsSystemRole" @(Model.IsSystemRole ? "checked" : "")>
+                    <label for="IsSystemRole">
+                        Sistem Rolü
+                    </label>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#create-update-btn").click(function () {
+            var url = "/users/roles/create-update";
+
+            var _token = $('input[name="__RequestVerificationToken"]').val();
+            var Id = $('input[name="Id"]').val();
+            var Name = $('#Name').val();
+            var SystemName = $('#SystemName').val();
+            var IsSystemRole = $('input#IsSystemRole').prop('checked');
+
+            $.ajax({
+                type: 'POST',
+                datatype: "json",
+                url: url,
+                data: {
+                    Id: Id,
+                    Name: Name,
+                    IsSystemRole: IsSystemRole,
+                    SystemName: SystemName,
+                    __RequestVerificationToken: _token
+                },
+                success: function (data) {
+                    if (data.success) {
+                        $('#roles').DataTable().ajax.reload();
+                        $('#modal-create-update-role').modal('hide');
+                        swal.fire('Başarılı', data.message, 'success');
+                    } else {
+                        swal.fire('Hata!', data.message, 'error');
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert(xhr.responseText);
+                }
+            });
+        });
+
+    });
+</script>

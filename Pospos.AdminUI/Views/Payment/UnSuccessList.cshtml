@@ -1,0 +1,391 @@
+﻿@model Pospos.AdminUI.Models.PendingPaymentProcessViewModel
+@inject Pospos.Business.Factories.CacheFactory _cacheFactory
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
+
+@{
+    ViewData["Title"] = "PaymentsPendingApproval";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section HeaderSection
+{
+    <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <link href="/plugins/datatables2/datatables.min.css" rel="stylesheet" />
+
+    <style type="text/css">
+        .modal-dialog {
+            max-width: 800px !important;
+        }
+    </style>
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">@SharedLocalizer["payments.list.unsuccess.title"]</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                    <li class="breadcrumb-item active">Onay Bekleyen Ödemeler</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="content">
+    @Html.AntiForgeryToken()
+    <div class="container-fluid">
+        <div class="card card-default" style="display: block !important;">
+            <div class="card-header">
+                <h3 class="card-title">@SharedLocalizer["payments.list.subtitle"]</h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <em class="fas fa-minus"></em>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <em class="fas fa-times"></em>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body" id="searchBox">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">@SharedLocalizer["username"]</label>
+                            <input type="text" class="form-control" id="Username" name="Username" placeholder="@SharedLocalizer["username"]" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">@SharedLocalizer["cardholder"]</label>
+                            <input type="text" class="form-control" id="CardHolder" name="CardHolder" placeholder="@SharedLocalizer["cardholder"]" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">@SharedLocalizer["cardnumber.firstcharacter"]</label>
+                            <input type="text" class="form-control" id="CardNumber" name="CardNumber" placeholder="@SharedLocalizer["cardnumber.example"]" value="" maxlength="6">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="BankId">@SharedLocalizer["bank"]</label>
+                            <select id="BankId" class="form-control select2bs4" name="BankId" style="width: 100% !important;">
+                                <option value="" selected>@SharedLocalizer["pleasechose"]</option>
+                                @foreach (var bank in Model.Banks)
+                                {
+                                    <option value="@bank.Id">@bank.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="PosId">@SharedLocalizer["pos"]</label>
+                            <select id="PosId" class="form-control select2bs4" name="PosId" style="width: 100% !important;">
+                                <option value="" selected>@SharedLocalizer["pleasechose"]</option>
+                                @foreach (var pos in Model.Poses)
+                                {
+                                    <option value="@pos.Id">@(string.Format("{0} ({1})", pos.CreditCardBankName, pos.Mode))</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <button id="search" class="btn btn-success col-md-1" name="Name">@SharedLocalizer["button.search"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+                @SharedLocalizer["payments.cardfooter.text"]
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table id="paymentprocess" class="display" style="width:100%">
+                            <caption>Ödemeler</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">@SharedLocalizer["datatables.payment.columns.companyname"]</th>
+                                    <th scope="col">Kullanıcı Adı</th>
+                                    <th scope="col">Ödeme Tipi</th>
+                                    <th scope="col">Banka Adı</th>
+                                    <th scope="col">Tutar</th>
+                                    <th scope="col">Tarih</th>
+                                    <th scope="col">Durum</th>
+                                    <th scope="col">Detay</th>
+                                    @if (await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PaymentRefundCancellation1)
+                            || await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PaymentRefundCancellation2)
+                            || await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PaymentRefundCancellation3))
+                                    {
+                                        <th scope="col">İptal / İade</th>
+                                    }
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="modal-payment-detail">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header card-header">
+                <h4 class="modal-title">Ödeme Detayı</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-payment-detail-data">
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default close" data-dismiss="modal">Kapat</button>
+                @*<button type="button" class="btn btn-primary" id="change-password-btn">Şifreyi Değiştir</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-payment-cancel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header card-header">
+                <h4 class="modal-title">Ödeme İptal/İade İşlemi</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-payment-cancel-data">
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" id="cancel-payment-btn">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section FooterSection
+{
+    <script src="/plugins/select2/js/select2.full.min.js"></script>
+    <script src="/plugins/datatables2/datatables.min.js"></script>
+    <script src="/js/moment.min.js"></script>
+
+    <script type="text/javascript">
+
+        function cancelPayment(id, level) {
+
+            Swal.fire({
+                title: '@SharedLocalizer["payment.list.question.cancel"]',
+                showDenyButton: false,
+                showCancelButton: true,
+                confirmButtonText: '@SharedLocalizer["button.yes.cancel"]',
+                cancelButtonText: '@SharedLocalizer["button.no.cancel"]',
+            })
+                .then((willDelete) => {
+                    if (willDelete.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            datatype: "json",
+                            url: '/payments/cancel-payment/first',
+                            data: {
+                                Id: id,
+                                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (data) {
+                                if (data.success) {
+                                    swal.fire('Başarılı', 'İptal/İade talebi girildi. Onay için yetkili ekranına gönderildi.', 'success');
+                                    $('#paymentprocess').DataTable().ajax.reload();
+                                }
+                                else {
+                                    swal.fire('Hata Oluştu!', 'İşlem sırasında hata oluştu?', 'warning');
+                                    return false;
+                                }
+                            }
+                        });
+                    } else {
+                        swal.fire("@SharedLocalizer["payment.list.question.canceledprocess"]");
+                    }
+                });
+
+        }
+
+        function openPaymentDetail(id) {
+            var url = "/payments/detail/" + id;
+
+            let token = $('input[name="__RequestVerificationToken"]').val();
+            let headers = { "RequestVerificationToken": token };
+
+            $.ajax({
+                type: 'GET',
+                datatype: "json",
+                url: url,
+                headers: headers,
+                success: function (data) {
+                    $('#modal-payment-detail-data').html(data);
+
+                    $('#modal-payment-detail').modal('show');
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+        function openPaymentCancel(id) {
+            var url = "/payments/cancel/" + id;
+
+            let token = $('input[name="__RequestVerificationToken"]').val();
+            let headers = { "RequestVerificationToken": token };
+
+            $.ajax({
+                type: 'GET',
+                datatype: "json",
+                url: url,
+                headers: headers,
+                success: function (data) {
+                    $('#modal-payment-cancel-data').html(data);
+
+                    $('#modal-payment-cancel').modal('show');
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+
+            $('#searchBox').parent().slideUp();
+
+            $('#BankId').select2({
+                theme: 'bootstrap4'
+            });
+
+            $('#PaymentTypeId').select2({
+                theme: 'bootstrap4'
+            });
+
+            $('#PosId').select2({
+                theme: 'bootstrap4'
+            });
+
+            var url = "/payments/list/unsuccess";
+
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            $("#search").click(function () {
+
+                url = "/payments/list/unsuccess";
+
+                if ($("#Username").val() != null && $("#Username").val() != "") {
+                    url += "?Username=" + $("#Username").val();
+                }
+                else {
+                    url += "?Username=";
+                }
+
+                if ($("#CardHolder").val() != null && $("#CardHolder").val() != "") {
+                    url += "&CardHolder=" + $("#CardHolder").val();
+                }
+
+                if ($("#CardNumber").val() != null && $("#CardNumber").val() != "") {
+                    url += "&CardNumber=" + $("#CardNumber").val();
+                }
+
+                if ($("#BankId").val() != null && $("#BankId").val() != "") {
+                    url += "&BankId=" + $("#BankId").val();
+                }
+
+                if ($("#PosId").val() != null && $("#PosId").val() != "") {
+                    url += "&PosId=" + $("#PosId").val();
+                }
+
+                //console.clear();
+                //console.log(url);
+
+                tbl.ajax.url(url).load();
+                //console.log(url);
+            });
+
+
+           var tbl = $('#paymentprocess').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "pageLength": 25,
+                "ajax": {
+                    "url": url,
+                    "contentType": "application/x-www-form-urlencoded",
+                    "type": "POST",
+                    "data": { "__RequestVerificationToken": token}
+                },
+                "columns": [
+                    { "data": "Id", "name": "Id", "autoWidth": true },
+                    { "data": "StationName", "name": "StationId", "autoWidth": true },
+                    { "data": "UserName", "name": "UserName", "autoWidth": true },
+                    { "data": "PaymentTypeName", "name": "PaymentTypeId", "autoWidth": true },
+                    { "data": "BankName", "name": "BankId", "autoWidth": true },
+                    { "data": "TotalAmount", "name": "TotalAmount", "autoWidth": true },
+                    { "data": "TransDate", "name": "TransDate", "autoWidth": true },
+                    {
+                        'data': null,
+                        'render': function (data, type, row) {
+
+                            if (row.CancellationLevel == 0) {
+                                return "Başarılı";
+                            }
+                            else if (row.CancellationLevel == 1) {
+                                return "İptal/İade 1 Beklemede";
+                            }
+                            else if (row.CancellationLevel == 2) {
+                                return "İptal/İade 2 Beklemede";
+                            }
+                            else if (row.CancellationLevel == 3) {
+                                return "<span style='color: red; font-weight: bold;'>İptal/İade Edildi</span>";
+                            }
+
+                        },
+                        "orderable": false
+                    },
+                    {
+                        'data': null,
+                        'render': function (data, type, row) {
+
+                            return '<a onclick="openPaymentDetail(' + row.Id + ')" class="btn btn-outline-dark btn-sm"><em class="fa fa-info"></em> @SharedLocalizer["button.detail"]</a>';
+
+                        },
+                        "orderable": false
+                    },
+                    @if (await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PaymentRefundCancellation1)
+                        || await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PaymentRefundCancellation2)
+                        || await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PaymentRefundCancellation3))
+                    {
+                        @await Component.InvokeAsync("PaymentCancel")
+                    }
+
+                ],
+                columnDefs: [{
+                    targets: 6, render: function (data) {
+                        return moment(data).format('DD/MM/YYYY');
+                    }
+                }],
+                "language": {
+                    "url": "/js/datatables-tr.json"
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,228 @@
+﻿@model PermissionsViewModel
+@{
+    ViewData["Title"] = "RolePermissions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section HeaderSection
+{
+    <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+    <style type="text/css">
+        th {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background-color: #fff !important;
+        }
+
+        table thead {
+            background-color: #fff !important;
+        }
+
+            table tbody tr td, table thead tr th {
+                border-left: 1px solid #c8c8c8 !important;
+                border-right: 1px solid #c8c8c8 !important;
+            }
+    </style>
+}
+
+@{
+    string YetkiyiKontrolEt(int yetki_id, int rol_id)
+    {
+        if (Model.RolesPermissions.Where(x => x.PermissionId == yetki_id && x.RoleId == rol_id).Any())
+        {
+            return "checked";
+        }
+
+        return string.Empty;
+    }
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Roller ve Yetkiler</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/users">Kullanıcı Yönetimi</a></li>
+                    <li class="breadcrumb-item active">Roller ve Yetkiler</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="content">
+    @if (Model.Success)
+    {
+        <div class="callout callout-info">
+            <h4>Bilgilendirme</h4>
+            Kayıtlar başarı ile güncellendi.
+        </div>
+    }
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Roller</h3>
+                    </div>
+                    <div class="box-body">
+                        <form method="post" action="~/users/role-permissions">
+                            @Html.AntiForgeryToken()
+                            <table class="table table-striped">
+                                <caption>Roller ve Yetkiler</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Yetki Adı</th>
+                                        <th scope="col">Sistem Adı</th>
+                                        @foreach (var item in Model.Roles)
+                                        {
+                                            <th scope="col">@item.Name</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var yetki in Model.Permissions.OrderBy(x => x.Name))
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.Raw(yetki.Name)
+                                            </td>
+                                            <td>
+                                                @yetki.SystemName
+                                            </td>
+                                            @foreach (var rol in Model.Roles)
+                                            {
+                                                <td>
+                                                    <div class="icheck-primary">
+                                                        <input type="checkbox" id="@string.Format("chk_{0}-{1}_{2}", rol.SystemName, rol.Id, yetki.Id)" name="@string.Format("chk_{0}-{1}_{2}", rol.SystemName, rol.Id, yetki.Id)" @YetkiyiKontrolEt(yetki.Id, rol.Id) @(yetki.Id == 12 ? "class=generalRole" : "class=chkRole")>
+                                                        <label for="@string.Format("chk_{0}-{1}_{2}", rol.SystemName, rol.Id, yetki.Id)">
+
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="form-group is-empty col-md-12">
+                                    @if (Model.editRoleId > 0)
+                                    {
+                                        <a href="/users/roles" class="btn bg-red btn-flat margin">
+                                            &lt;&lt;&lt; Geri<div class="ripple-container"></div>
+                                        </a>
+                                    }
+                                    <button type="button" id="yetkileriDuzenle" class="btn bg-purple btn-flat margin">
+                                        Değişiklikleri Kaydet<div class="ripple-container"></div>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section FooterSection
+{
+    <script type="text/javascript">
+
+        $(function () {
+
+            $(".generalRole").change(function () {
+                if (this.checked) {
+                    Swal.fire({
+                        title: 'Bu yetkiyi verirseniz bu roldeki tüm kullanıcıların sınırsız yetkisi olacaktır. Devam etmek istediğinize emin misiniz?',
+                        showDenyButton: false,
+                        showCancelButton: true,
+                        confirmButtonText: 'Evet',
+                        cancelButtonText: 'Hayır',
+                    })
+                        .then((willDelete) => {
+                            if (willDelete.isConfirmed) {
+
+                            } else {
+                                this.checked = false;
+                                swal.fire("İşlem iptal edildi.");
+                            }
+                        });
+                }
+            });
+
+            $(document).on("click", "#yetkileriDuzenle", function (e) {
+
+                var token = $('input[name="__RequestVerificationToken"]').val();
+                var checkedbox_value = "";
+                var uncheckedbox_value = "";
+                $(".generalRole").each(function () {
+                    var ischecked = $(this).is(":checked");
+                    if (ischecked) {
+                        checkedbox_value += $(this).attr('name') + ",";
+                    }
+                    else {
+                        uncheckedbox_value += $(this).attr('name') + ",";
+                    }
+                });
+
+                $(".chkRole").each(function () {
+                    var ischecked = $(this).is(":checked");
+                    if (ischecked) {
+                        checkedbox_value += $(this).attr('name') + ",";
+                    }
+                    else {
+                        uncheckedbox_value += $(this).attr('name') + ",";
+                    }
+                });
+
+                //console.log(checkedbox_value);
+                //console.log(uncheckedbox_value);
+
+                var data = {
+                    "__RequestVerificationToken": token,
+                    "checkedbox_value": checkedbox_value,
+                    "uncheckedbox_value": uncheckedbox_value
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/users/role-permissions",
+                    data: data,
+                    success: function (data) {
+                        if (data.success) {
+
+                            Toast.fire({
+                                icon: 'success',
+                                title: data.message
+                            });
+
+                        } else {
+
+                            Toast.fire({
+                                icon: 'error',
+                                title: 'Bilinmeyen bir hata oluştu!'
+                            });
+
+                        }
+                    },
+                    error: function (hata, ajaxOptions, thrownError) {
+                        Toast.fire({
+                            icon: 'error',
+                            title: 'Bilinmeyen bir hata oluştu!'
+                        });
+                    }
+                });
+
+            });
+        });
+    </script>
+}

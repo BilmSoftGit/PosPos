@@ -1,0 +1,240 @@
+﻿@model Pospos.AdminUI.Models.CreateUpdateUserViewModel
+@{
+    ViewData["Title"] = "CreateOrUpdate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section HeaderSection
+{
+    <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Kullanıcılar | İşlemler</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                    <li class="breadcrumb-item"><a href="/users">Kullanıcılar</a></li>
+                    <li class="breadcrumb-item active">Ekle/Güncelle</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Kullanıcı Ekle / Güncelle</h3>
+                    </div>
+                    <form method="post" action="/users/create-update@(Model.Id > 0 ? "?editId="+Model.Id : "")">
+                        <input type="hidden" name="editId" value="@Model.Id" />
+                        @Html.AntiForgeryToken()
+                        <div class="card-body">
+                            <div class="row">
+                                <div class=" col-md-6">
+                                    <div class="form-group mb-6">
+                                        <label for="exampleInputPassword1">Firma</label>
+                                        <select id="CompanyId" class="form-control select2bs4" name="CompanyId" style="width: 100% !important;" required>
+                                            @foreach (var company in Model.Companies)
+                                            {
+                                                if (Model.CompanyId == company.Id)
+                                                {
+                                                    <option selected="selected" value="@company.Id">@company.CompanyName</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@company.Id">@company.CompanyName</option>
+                                                }
+                                            }
+
+                                            @if (Model.CompanyId == 0)
+                                            {
+                                                <option selected="selected" value="">Firma Seçiniz...</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Adı</label>
+                                        <input type="text" class="form-control" name="Name" placeholder="Adı" value="@Model.Name" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Soyadı</label>
+                                        <input type="text" class="form-control" name="Surname" placeholder="Soyadı" value="@Model.Surname" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="icheck-primary">
+                                            <input type="checkbox" id="IsApproved" name="IsApproved" @(Model.IsApproved ? "checked" : "")>
+                                            <label for="IsApproved">
+                                                Onaylı Kullanıcı
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Kullanıcının Rolleri</label>
+                                        <select name="roles[]" id="roles" class="select2" multiple="multiple" data-placeholder="Rol Seçin..." style="width: 100%;">
+                                            @foreach (var role in Model.Roles)
+                                            {
+                                                if (Model.SelectedRoles != null)
+                                                {
+                                                    if (Model.SelectedRoles.Any(x => x.Id == role.Id))
+                                                    {
+                                                        <option value="@role.Id" selected>@role.Name</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@role.Id">@role.Name</option>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <option value="@role.Id">@role.Name</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Kullanıcıya Ek Yetkiler</label>
+                                        <select name="permissions[]" id="permissions" class="select2" multiple="multiple" data-placeholder="Kullanıcıya Özel Yetki Seçin..." style="width: 100%;">
+                                            @foreach (var permisson in Model.Permissions)
+                                            {
+                                                if (Model.SelectedPermissions != null && Model.SelectedPermissions.Count() > 0)
+                                                {
+                                                    if (Model.SelectedPermissions.Any(x => x.Id == permisson.Id))
+                                                    {
+                                                        <option value="@permisson.Id" selected>@permisson.Name</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@permisson.Id">@permisson.Name</option>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <option value="@permisson.Id">@permisson.Name</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Kullanıcı Adı</label>
+                                        <input type="text" class="form-control" name="Username" placeholder="Kullanıcı Adı" value="@Model.Username" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">E-Posta Adresi</label>
+                                        <input type="text" class="form-control" name="EMailAddress" placeholder="E-Posta Adresi" value="@Model.EMailAddress" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Telefon Numarası</label>
+                                        <input type="text" class="form-control" name="PhoneNumber" placeholder="Telefon Numarası" value="@Model.PhoneNumber" maxlength="10" required>
+                                    </div>
+                                    @if (Model.Id <= 0)
+                                    {
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Şifre</label>
+                                            <input type="password" class="form-control" name="Password" id="Password" placeholder="Şifre" maxlength="15" value="@Model.Password" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword1">Şifre (Tekrar)</label>
+                                            <input type="password" class="form-control" name="PasswordAgain" id="PasswordAgain" placeholder="Şifre (Tekrar)" maxlength="15" value="@Model.Password" required>
+                                        </div>
+                                    }
+                                    <div class="form-group">
+                                        <div class="icheck-primary">
+                                            <input type="checkbox" id="IsActive" name="IsActive" @(Model.IsActive ? "checked" : "")>
+                                            <label for="IsActive">
+                                                Aktif Kullanıcı
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="/customers" class="btn btn-danger">&lt;&lt; Geri</a>
+                            <button type="submit" class="btn btn-primary" style="width: 200px;">Kaydet</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section FooterSection
+{
+    <script src="/plugins/select2/js/select2.full.min.js"></script>
+    <script src="/plugins/moment/moment.min.js"></script>
+    <script src="/plugins/inputmask/jquery.inputmask.min.js"></script>
+
+    <script type="text/javascript">
+
+        var element;
+
+        $(function () {
+
+            $('#roles').select2({
+                theme: 'bootstrap4'
+            });
+
+            $('#permissions').select2({
+                theme: 'bootstrap4'
+            });
+
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-center',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            $('[data-mask]').inputmask();
+
+            $("#TaxNumber").inputFilter(function (value) {
+                return /^\d*$/.test(value);
+            });
+
+            $('#CompanyId').select2({
+                theme: 'bootstrap4'
+            });
+
+            @if (Model.Success)
+            {
+                @Html.Raw("toastr.success('" + Model.Message + "');")
+            }
+
+            @if (!Model.Success && !string.IsNullOrWhiteSpace(Model.Message))
+            {
+                @Html.Raw("toastr.error('" + Model.Message + "');")
+            }
+        });
+
+        // Restricts input for the set of matched elements to the given inputFilter function.
+        (function ($) {
+            $.fn.inputFilter = function (inputFilter) {
+                return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                    if (inputFilter(this.value)) {
+                        this.oldValue = this.value;
+                        this.oldSelectionStart = this.selectionStart;
+                        this.oldSelectionEnd = this.selectionEnd;
+                    } else if (this.hasOwnProperty("oldValue")) {
+                        this.value = this.oldValue;
+                        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                    } else {
+                        this.value = "";
+                    }
+                });
+            };
+        }(jQuery));
+    </script>
+}

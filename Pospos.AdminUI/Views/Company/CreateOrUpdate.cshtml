@@ -1,0 +1,239 @@
+﻿@model Pospos.AdminUI.Models.CreateUpdateCompanyViewModel
+@{
+    ViewData["Title"] = "CreateOrUpdate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section HeaderSection
+{
+    <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Üye İşyerleri | İşlemler</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                    <li class="breadcrumb-item active">Üye İşyerleri</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Firma Ekle / Güncelle</h3>
+                    </div>
+                    <form method="post" action="/member-businesses/create-update">
+                        <input type="hidden" name="editId" value="@Model.Id" />
+                        @Html.AntiForgeryToken()
+                        <div class="card-body">
+                            <div class="row">
+                                <div class=" col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Firma Cari Kodu</label>
+                                        <input type="text" class="form-control" name="CompanyCode" placeholder="Firma Cari Kodu" value="@Model.CompanyCode" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Firma Adı</label>
+                                        <input type="text" class="form-control" name="CompanyName" placeholder="Firma Adı" value="@Model.CompanyName" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Vergi Dairesi</label>
+                                        <input type="text" class="form-control" name="TaxOffice" placeholder="Vergi Dairesi" value="@Model.TaxOffice" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Vergi Numarası</label>
+                                        <input type="text" class="form-control" name="TaxNumber" id="TaxNumber" placeholder="Vergi Numarası" value="@Model.TaxNumber" maxlength="11" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="icheck-primary">
+                                            <input type="checkbox" id="IsApproved" name="IsApproved" @(Model.IsApproved ? "checked" : "")>
+                                            <label for="IsApproved">
+                                                Onaylı firma
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-6">
+                                        <label for="exampleInputPassword1">Şehir</label>
+                                        <select id="cities" class="form-control select2bs4" name="CityId" style="width: 100% !important;" required>
+                                            @if (Model.CityId > 0)
+                                            {
+                                                @foreach (var city in Model.Cities)
+                                                {
+                                                    if (Model.CityId == city.Id)
+                                                    {
+                                                        <option selected="selected" value="@city.Id">@city.Name</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@city.Id">@city.Name</option>
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                @if (!Model.Cities.Any(x => x.DefaultValue))
+                                                {
+                                                    <option selected="selected" value="">Şehir Seçiniz...</option>
+                                                }
+
+                                                @foreach (var city in Model.Cities)
+                                                {
+                                                    if (city.DefaultValue)
+                                                    {
+                                                        <option selected="selected" value="@city.Id">@city.Name</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@city.Id">@city.Name</option>
+                                                    }
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group mb-6">
+                                        <label for="exampleInputPassword1">İlçe</label>
+                                        <select id="districts" class="form-control select2bs4" name="DistrictId" style="width: 100% !important;" required>
+                                            <option selected="selected" value="">İlçe Seçiniz...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Adres</label>
+                                        <input type="text" class="form-control" name="Address" placeholder="Adres" value="@Model.Address">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <a href="/member-businesses" class="btn btn-danger">&lt;&lt; Geri</a>
+                            <button type="submit" class="btn btn-primary" style="width: 200px;">Kaydet</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section FooterSection
+{
+    <script src="/plugins/select2/js/select2.full.min.js"></script>
+    <script src="/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+    <script src="/plugins/moment/moment.min.js"></script>
+    <script src="/plugins/inputmask/jquery.inputmask.min.js"></script>
+
+    <script type="text/javascript">
+
+        var element;
+
+        $(function () {
+
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-center',
+                showConfirmButton: false,
+                timer: 3000
+            });
+
+            $('[data-mask]').inputmask();
+
+            $("#TaxNumber").inputFilter(function (value) {
+                return /^\d*$/.test(value);
+            });
+
+            $('#cities').select2({
+                theme: 'bootstrap4'
+            });
+
+            element = $('#districts').select2({
+                theme: 'bootstrap4'
+            });
+
+            $('#cities').on('change', function () {
+                getDistrict(0);
+            });
+
+            @if (Model.Id > 0)
+            {
+                @Html.Raw("getDistrict(" + Model.DistrictId + ");")
+            }
+
+            @if (Model.Success)
+            {
+                @Html.Raw("Toast.fire({icon: 'success', title: '" + Model.Message + "'});")
+            }
+
+            @if (!Model.Success && !string.IsNullOrWhiteSpace(Model.Message))
+            {
+                @Html.Raw("Toast.fire({icon: 'error', title: '" + Model.Message + "'});")
+            }
+        });
+
+        function getDistrict(editId) {
+            var cityId = $("#cities option:selected").val();
+            var token = $('input[name="__RequestVerificationToken"]').val();
+            var data = {
+                "__RequestVerificationToken": token,
+                "cityId": cityId
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/get-districts",
+                data: data,
+                success: function (data) {
+                    element.val("");
+                    element.find('option').remove();
+                    $.each(data.items, function (index, value) {
+                        if (editId > 0 && value.id == editId) {
+                            element.append('<option value="' + value.id + '" selected="selected">' + value.text + '</option>');
+                        }
+                        else {
+                            element.append('<option value="' + value.id + '">' + value.text + '</option>');
+                        }
+                    });
+                },
+                error: function (hata, ajaxOptions, thrownError) {
+
+                }
+            });
+
+            if (editId > 0) {
+                //console.log(editId);
+                element.val(editId);
+                element.trigger('change');
+            }
+        }
+
+        // Restricts input for the set of matched elements to the given inputFilter function.
+        (function ($) {
+            $.fn.inputFilter = function (inputFilter) {
+                return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                    if (inputFilter(this.value)) {
+                        this.oldValue = this.value;
+                        this.oldSelectionStart = this.selectionStart;
+                        this.oldSelectionEnd = this.selectionEnd;
+                    } else if (this.hasOwnProperty("oldValue")) {
+                        this.value = this.oldValue;
+                        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                    } else {
+                        this.value = "";
+                    }
+                });
+            };
+        }(jQuery));
+    </script>
+}

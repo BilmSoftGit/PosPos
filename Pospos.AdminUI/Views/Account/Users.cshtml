@@ -1,0 +1,336 @@
+﻿@{
+    ViewData["Title"] = "Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section HeaderSection
+{
+    <link href="/plugins/datatables2/datatables.min.css" rel="stylesheet" />
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Kullanıcılar</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                    <li class="breadcrumb-item active">Kullanıcılar</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="content">
+    @Html.AntiForgeryToken()
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <a class="btn btn-primary btn-block" href="/customers">
+                                    <em class="fas fa-users"></em> Tüm Kullanıcılar
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a class="btn btn-secondary btn-block" href="/users/create-update">
+                                    <em class="fas fa-plus"></em> Yeni Kullanıcı Ekle
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table id="customers" class="display" style="width:100%">
+                            <caption>Kullanıcılar</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Adı</th>
+                                    <th scope="col">Soyadı</th>
+                                    <th scope="col">Firması</th>
+                                    <th scope="col">İl/İlçe</th>
+                                    <th scope="col">E-Posta Adresi</th>
+                                    <th scope="col">Onay Durumu</th>
+                                    <th scope="col">Aktif</th>
+                                    <th scope="col">Tarih</th>
+                                    <th scope="col">Düzenle</th>
+                                    <th scope="col">Durum</th>
+                                    <th scope="col">Onay</th>
+                                    <th scope="col">Şifre</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="modal-change-password">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header card-header">
+                <h4 class="modal-title">Kullanıcı Şifre Resetleme</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-change-password-data">
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default close" data-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary" id="change-password-btn">Şifreyi Değiştir</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section FooterSection
+{
+    <script src="/plugins/datatables2/datatables.min.js"></script>
+    <script src="/js/moment.min.js"></script>
+    @*<script src="/js/custom-users.js"></script>*@
+
+    <script type="text/javascript">
+        function changeStatus(id, status) {
+            Swal.fire({
+                title: 'Kayıt durumunu değiştirmek istediğinize emin misiniz?',
+                showDenyButton: false,
+                showCancelButton: true,
+                confirmButtonText: 'Evet, Değiştir',
+                cancelButtonText: 'İptal',
+            })
+                .then((willDelete) => {
+                    if (willDelete.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            datatype: "json",
+                            url: '/users/active-passive-user',
+                            data: {
+                                Id: id,
+                                IsActive: status,
+                                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (data) {
+                                if (data.success) {
+                                    swal.fire('Başarılı', 'Kayıt başarıyla güncellendi?', 'success');
+                                    $('#customers').DataTable().ajax.reload();
+                                }
+                                else {
+                                    swal.fire('Hata Oluştu!', 'İşlem sırasında hata oluştu?', 'warning');
+                                    return false;
+                                }
+                            }
+                        });
+                    } else {
+                        swal.fire("İşlem iptal edildi.");
+                    }
+                });
+        }
+
+        function changeApprove(id, status) {
+            Swal.fire({
+                title: 'Kayıt durumunu değiştirmek istediğinize emin misiniz?',
+                showDenyButton: false,
+                showCancelButton: true,
+                confirmButtonText: 'Evet, Değiştir',
+                cancelButtonText: 'İptal',
+            })
+                .then((willDelete) => {
+                    if (willDelete.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            datatype: "json",
+                            url: '/users/approve-user',
+                            data: {
+                                Id: id,
+                                IsApproved: status,
+                                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (data) {
+                                if (data.success) {
+                                    swal.fire('Başarılı', 'Kayıt başarıyla güncellendi?', 'success');
+                                    $('#customers').DataTable().ajax.reload();
+                                }
+                                else {
+                                    swal.fire('Hata Oluştu!', 'İşlem sırasında hata oluştu?', 'warning');
+                                    return false;
+                                }
+                            }
+                        });
+                    } else {
+                        swal.fire("İşlem iptal edildi.");
+                    }
+                });
+        }
+
+        function openChangePasswordModal(id) {
+            var url = "/change-password-from-admin?Id=" + id;
+
+            let token = $('input[name="__RequestVerificationToken"]').val();
+            let headers = { "RequestVerificationToken": token };
+
+            $.ajax({
+                type: 'GET',
+                datatype: "json",
+                url: url,
+                headers: headers,
+                success: function (data) {
+                    $('#modal-change-password-data').html(data);
+
+                    $('#modal-change-password').modal('show');
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            var token = $('input[name="__RequestVerificationToken"]').val();
+            $('#customers').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "pageLength": 25,
+                "headers": {
+                    'CSRFToken': token
+                },
+                "ajax": {
+                    "url": "/customers",
+                    "type": "POST",
+                    "data": {
+                        __RequestVerificationToken: token
+                    }
+                },
+                "columns": [
+                    { "data": "Id", "name": "Id", "autoWidth": true },
+                    {
+
+                        "data": "Name", "name": "Name", "autoWidth": true,
+                        render: function (data, type, row) {
+                            return escapeHTML(row.Name);
+                        }
+                    },
+                    {
+                        "data": "Surname", "name": "Surname", "autoWidth": true,
+                        render: function (data, type, row) {
+                            return escapeHTML(row.Surname);
+                        }
+                    },
+                    { "data": "CompanyName", "name": "CompanyId", "autoWidth": true },
+                    {
+                        "data": null, "name": "CityId", "autoWidth": true,
+                        "render": function (data, type, row) {
+                            return row.CityName + " / " + row.DistrictName
+                        }
+                    },
+                    {
+                        "data": "EMailAddress", "name": "EMailAddress", "autoWidth": true,
+                        render: function (data, type, row) {
+                            return escapeHTML(row.EMailAddress);
+                        }
+                    },
+                    {
+                        "data": "IsApproved", "name": "IsApproved", "autoWidth": true,
+                        "render": function (data, type, row) {
+                            if (row.IsApproved == true) {
+                                return 'Onaylı'
+                            } else {
+                                return 'Onay Bekliyor'
+                            }
+                        }
+                    },
+                    {
+                        "data": "IsActive", "name": "IsActive", "autoWidth": true,
+                        "render": function (data, type, row) {
+                            if (row.IsActive == true) {
+                                return 'Aktif'
+                            } else {
+                                return 'Pasif'
+                            }
+                        }
+                    },
+                    { "data": "InsertDate", "name": "InsertDate", "autoWidth": true },
+                    {
+                        'data': null,
+                        'render': function (data, type, row) {
+
+                            return '<a href="/users/create-update?editId=' + row.Id + '" class="btn btn-outline-danger btn-sm"><em class="fa fa-edit"></em> Düzenle</a>';
+
+                        },
+                        "orderable": false
+                    },
+                    {
+                        'data': null,
+                        'render': function (data, type, row) {
+
+                            var buttons = "";
+
+                            if (row.IsActive == true) {
+                                buttons = '<a href="#customers" onclick="changeStatus(' + row.Id + ', false)" class="btn btn-outline-success btn-sm"><em class="fa fa-check-square"></em> Pasifleştir</a>&nbsp;&nbsp;';
+                            }
+                            else {
+                                buttons = '<a href="#customers" onclick="changeStatus(' + row.Id + ', true)" class="btn btn-outline-warning btn-sm"><em class="fa fa-square"></em> Aktifleştir</a>&nbsp;&nbsp;';
+                            }
+
+                            return buttons;
+                        },
+                        "orderable": false
+                    },
+                    {
+                        'data': null,
+                        'render': function (data, type, row) {
+
+                            var buttons = "";
+
+                            if (row.IsApproved) {
+                                buttons = '<a href="#customers" onclick="changeApprove(' + row.Id + ', false)" class="btn btn-outline-secondary btn-sm"><em class="fa fa-check-square"></em> Onayı Kaldır</a>&nbsp;&nbsp;';
+                            }
+                            else {
+                                buttons = '<a href="#customers" onclick="changeApprove(' + row.Id + ', true)" class="btn btn-outline-secondary btn-sm"><em class="fa fa-square"></em> Onayla</a>&nbsp;&nbsp;';
+                            }
+
+                            return buttons;
+                        },
+                        "orderable": false
+                    },
+                    {
+                        'data': null,
+                        'render': function (data, type, row) {
+
+                            return '<a href="#customers" onclick="openChangePasswordModal(' + row.Id + ')" class="btn btn-outline-primary btn-sm"><em class="fa fa-key"></em> Şifre Değiştir</a>';
+
+                        },
+                        "orderable": false
+                    }
+                ],
+                columnDefs: [{
+                    targets: 8, render: function (data) {
+                        return moment(data).format('DD/MM/YYYY');
+                    }
+                }],
+                "language": {
+                    "url": "/js/datatables-tr.json"
+                }
+            });
+        });
+
+        var htmlEntities = {            nbsp: ' ',            cent: '¢',            pound: '£',            yen: '¥',            euro: '€',            copy: '©️',            reg: '®️',            lt: '<',            gt: '>',            quot: '"',            amp: '&',            apos: '\''        };        function unescapeHTML(str) {            return str.replace(/\&([^;]+);/g, function (entity, entityCode) {                var match;                if (entityCode in htmlEntities) {                    return htmlEntities[entityCode];                    /*eslint no-cond-assign: 0*/                } else if (match = entityCode.match(/^#x([\da-fA-F]+)$/)) {                    return String.fromCharCode(parseInt(match[1], 16));                    /*eslint no-cond-assign: 0*/                } else if (match = entityCode.match(/^#(\d+)$/)) {                    return String.fromCharCode(~~match[1]);                } else {                    return entity;                }            });        };
+
+        var escapeChars = {            '¢': 'cent',            '£': 'pound',            '¥': 'yen',            '€': 'euro',            '©️': 'copy',            '®️': 'reg',            '<': 'lt',            '>': 'gt',            '"': 'quot',            '&': 'amp',            '\'': '#39'        };        var regexString = '[';        for (var key in escapeChars) {            regexString += key;        }        regexString += ']';        var regex = new RegExp(regexString, 'g');        function escapeHTML(str) {            return str.replace(regex, function (m) {                return '&' + escapeChars[m] + ';';            });        };
+
+
+
+    </script>
+
+}

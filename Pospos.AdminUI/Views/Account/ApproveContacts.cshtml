@@ -1,0 +1,132 @@
+﻿@model Pospos.AdminUI.Models.ApproveContactsViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@SharedLocalizer["project.name"]</title>
+
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <!-- Google Font: Source Sans Pro -->
+    @*<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">*@
+    <link href="/fonts/SourceSansPro/SourceSansPro.css" rel="stylesheet" />
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition login-page">
+    @await Html.PartialAsync("_Culture")
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="/login"><strong>Pos</strong>Pos</a>
+
+        </div>
+        <!-- /.login-logo -->
+        <div class="card">
+            <div class="card-body login-card-body">
+                @if (!Model.Success && !string.IsNullOrWhiteSpace(Model.Message))
+                {
+                    <div class="help-block text-center text-danger">
+                        @Model.Message
+                        <br />
+                        <br />
+                    </div>
+                }
+                @if (Model.Success)
+                {
+                    <div class="help-block text-center text-danger">
+                        @Model.Message
+                        <br />
+                        <br />
+                    </div>
+                }
+                @if (Model.smsenable && Model.emailenable)
+                {
+                    <p class="login-box-msg">@SharedLocalizer["approvecontacts.emailsmstoken.text"]</p>
+                }
+                else if (Model.smsenable)
+                {
+                    <p class="login-box-msg">@SharedLocalizer["approvecontacts.smstoken.text"]</p>
+                }
+                else if (Model.emailenable)
+                {
+                    <p class="login-box-msg">@SharedLocalizer["approvecontacts.emailtoken.text"]</p>
+                }
+                <form action="/approve-contacts" method="post" id="approve-contacts-form">
+                    @Html.AntiForgeryToken()
+                    @if (Model.smsenable)
+                    {
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="SMSToken" placeholder="@SharedLocalizer["approvecontacts.smstoken.placeholder"]" required>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-envelope"></span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (Model.emailenable)
+                    {
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" name="EMailToken" placeholder="@SharedLocalizer["approvecontacts.emailtoken.placeholder"]" required>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-lock"></span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="col-8">
+                            &nbsp;
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary btn-block">@SharedLocalizer["approvecontacts.button"]</button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </form>
+
+                <p class="mb-0">
+                    <a href="/login">@SharedLocalizer["login"]</a>
+                </p>
+            </div>
+            <!-- /.login-card-body -->
+        </div>
+    </div>
+    <!-- /.login-box -->
+    <!-- jQuery -->
+    <script src="/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/dist/js/adminlte.min.js"></script>
+
+    <script src="https://www.google.com/recaptcha/api.js?render=@Configuration["Google:RecaptchaV3SiteKey"]"></script>
+    <script>
+        grecaptcha.ready(function () {
+            grecaptcha.execute("@Configuration["Google:RecaptchaV3SiteKey"]")
+                .then(function (token) {
+                    //double check
+                    $('#approve-contacts-form').prepend('<input type="hidden" name="token" value="' + token + '">');
+                    $.getJSON("/RecaptchaV3Vverify?token=" + token, function (data) {
+                        $('#approve-contacts-form').find("input[type=submit]").prop("disabled", !data);
+                    });
+                });
+        });
+    </script>
+</body>
+</html>

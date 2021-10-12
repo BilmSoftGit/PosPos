@@ -1,0 +1,185 @@
+﻿@model Pospos.AdminUI.Models.PaymentCanceledDetailViewModel
+<style type="text/css">
+    .successPayment {
+        color: blue;
+        font-weight: bold;
+    }
+
+    .waitingPayment {
+        color: red;
+        font-weight: bold;
+    }
+</style>
+<div class="card card-primary">
+    <form method="post" action="/change-password">
+        <input type="hidden" name="UserId" value="" />
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Kullanıcı Adı</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.PaymentProcessCancel.UserName
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>İstasyon Adı</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.Station.Name
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Banka Adı</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.Pos.CreditCardBankName
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Ödeme Tipi</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.PaymentType.Name
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Onay Durumu</label>
+                        </div>
+                        <div class="col-md-8">
+                            @(Model.PaymentProcessCancel.IsApproved ? Html.Raw("<span class='successPayment'>Onaylı</span>") : Html.Raw("<span class='waitingPayment'>Onaysız</span>"))
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>BankOrder</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.PaymentProcessCancel.BankOrder
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>İşlem Tarihi</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.PaymentProcessCancel.TransDate.GetValueOrDefault(DateTime.Now).ToString("dd/MM/yyyy HH:mm:ss")
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Kayıt Tarihi</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.PaymentProcessCancel.InsertDate.ToString("dd/MM/yyyy HH:mm:ss")
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>IP Adresi</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.PaymentProcessCancel.ClientIp
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Mesaj</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.PaymentProcessCancel.HandleMessage
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Kart Adı</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.PaymentProcessCancel.CardHolder
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Kart Numarası</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.PaymentProcessCancel.CardNumber
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>AuthCode</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.PaymentProcessCancel.AuthCode
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Tutar</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.PaymentProcessCancel.TotalAmount
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Taksit Sayısı</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.PaymentProcessCancel.InstalmentCount
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Mağaza Tipi</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.PaymentProcessCancel.StoreType
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>AuthCode</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.PaymentProcessCancel.AuthCode
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>HostRefNumber</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.PaymentProcessCancel.HostRefNum
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>ProcReturnCode</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.PaymentProcessCancel.ProcReturnCode
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>TransId</label>
+                        </div>
+                        <div class="col-md-8">
+                            @Model.PaymentProcessCancel.TransId
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

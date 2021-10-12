@@ -1,0 +1,181 @@
+﻿@inject Pospos.Business.Factories.CacheFactory _cacheFactory
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
+@inject Pospos.AdminUI.Helpers.HtmlRequestUrl _urlContext
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Configuration
+@inject IHtmlLocalizer<SharedResource> SharedLocalizer
+<!-- Sidebar Menu -->
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column nav-flat" data-widget="treeview" role="menu" data-accordion="false">
+        <li class="nav-item">
+            <a href="/" class="nav-link">
+                <em class="nav-icon fas fa-tachometer-alt"></em>
+                <p>
+                    @SharedLocalizer["menu.name.loginpage"]
+                </p>
+            </a>
+        </li>
+
+        @*<div class="erkan" style="display: none;">
+                @_httpContextAccessor.HttpContext.Request.Path.ToString()
+            </div>*@
+
+        @if (await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PagePayments)
+       || await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PageWaitingForBankApprove)
+       || await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PageCancellationPayment))
+        {
+<li class="nav-item @_urlContext.GetMainMenuControl("/payments")">
+    <a href="#" class="nav-link @_urlContext.GetBottomMenuControl("/payments")">
+        <em class="nav-icon fas fa-money-bill"></em>
+        <p>
+            @SharedLocalizer["menu.name.payment"]
+            <em class="fas fa-angle-left right"></em>
+            <span class="badge badge-info right">7</span>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        @if (await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PagePayments))
+        {
+<li class="nav-item">
+    <a href="/payments/list" class="nav-link @_urlContext.GetActiveMenuControl("/payments/list")">
+        <em class="far fa-circle nav-icon"></em>
+        <p>@SharedLocalizer["menu.name.payment"]</p>
+    </a>
+</li>
+}
+        @if (await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PageSuccessPayments))
+        {
+<li class="nav-item">
+    <a href="/payments/list/success" class="nav-link @_urlContext.GetActiveMenuControl("/payments/list/success")">
+        <em class="far fa-circle nav-icon"></em>
+        <p>@SharedLocalizer["menu.name.successpayments"]</p>
+    </a>
+</li>
+}
+        @if (await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PageUnsuccessPayments))
+        {
+<li class="nav-item">
+    <a href="/payments/list/unsuccess" class="nav-link @_urlContext.GetActiveMenuControl("/payments/list/unsuccess")">
+        <em class="far fa-circle nav-icon"></em>
+        <p>@SharedLocalizer["menu.name.unsuccesspayments"]</p>
+    </a>
+</li>
+}
+        @if (await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PageWaitingForBankApprove))
+        {
+<li class="nav-item">
+    <a href="/payments/bank/list" class="nav-link @_urlContext.GetActiveMenuControl("/payments/bank/list")">
+        <em class="far fa-circle nav-icon"></em>
+        <p>@SharedLocalizer["menu.name.pendingbankapproval"]</p>
+    </a>
+</li>}
+        @if (await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PageCancellationPayment))
+        {
+<li class="nav-item">
+    <a href="/payments/canceled-payments" class="nav-link @_urlContext.GetActiveMenuControl("/payments/canceled-payments")">
+        <em class="far fa-circle nav-icon"></em>
+        <p>@SharedLocalizer["menu.name.paymentsrefundcancel"]</p>
+    </a>
+</li>}
+    </ul>
+</li>
+}
+
+
+        @if (await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PageUserManagement)
+          || await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PageRoleManagement)
+          || await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PageRolePermissionManagement))
+        {
+<li class="nav-item @_urlContext.GetMainMenuControl("/customers")">
+    <a href="#" class="nav-link @_urlContext.GetBottomMenuControl("/customers")">
+        <em class="nav-icon fas fa-user"></em>
+        <p>
+            @SharedLocalizer["menu.name.usermanagement"]
+            <em class="fas fa-angle-left right"></em>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        @if (await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PageUserManagement))
+        {
+<li class="nav-item">
+    <a href="/customers" class="nav-link @_urlContext.GetActiveMenuControl("/customers")">
+        <em class="far fa-circle nav-icon"></em>
+        <p>@SharedLocalizer["menu.name.users"]</p>
+    </a>
+</li>}
+        @if (await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PageRoleManagement))
+        {
+<li class="nav-item">
+    <a href="/users/roles" class="nav-link @_urlContext.GetActiveMenuControl("/users/roles")">
+        <em class="far fa-circle nav-icon"></em>
+        <p>@SharedLocalizer["menu.name.roles"]</p>
+    </a>
+</li>
+}
+        @if (await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PageRolePermissionManagement))
+        {
+<li class="nav-item">
+    <a href="/users/role-permissions" class="nav-link @_urlContext.GetActiveMenuControl("/users/role-permissions")">
+        <em class="far fa-circle nav-icon"></em>
+        <p>@SharedLocalizer["menu.name.rolespermissions"]</p>
+    </a>
+</li>}
+    </ul>
+</li>
+}
+        @if (await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PageSettingManagement))
+        {
+<li class="nav-item @_urlContext.GetMainMenuControl("/settings")">
+    <a href="#" class="nav-link @_urlContext.GetBottomMenuControl("/settings")">
+        <em class="nav-icon fas fa-address-card"></em>
+        <p>
+            @SharedLocalizer["menu.name.settings"]
+            <em class="fas fa-angle-left right"></em>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        @*<li class="nav-item">
+                <a href="#" class="nav-link">
+                    <em class="far fa-circle nav-icon"></em>
+                    <p>@SharedLocalizer["menu.name.settingspanel"]</p>
+                </a>
+            </li>*@
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <em class="far fa-circle nav-icon"></em>
+                <p>@SharedLocalizer["menu.name.settingsbank"]</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#" class="nav-link">
+                <em class="far fa-circle nav-icon"></em>
+                <p>@SharedLocalizer["menu.name.settingspayment"]</p>
+            </a>
+        </li>
+    </ul>
+</li>}
+        @if (await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PageMemberBussinesManagement))
+        {
+<li class="nav-item">
+    <a href="/member-businesses" class="nav-link @_urlContext.GetActiveMenuControl("/member-businesses") @_urlContext.GetBottomMenuControl("/member-businesses")">
+        <em class="nav-icon fas fa-building"></em>
+        <p>@SharedLocalizer["menu.name.memberbusinesses"]</p>
+    </a>
+</li>
+ } @*<li class="nav-item">
+        <a href="#" class="nav-link">
+            <em class="nav-icon fas fa-assistive-listening-systems"></em>
+            <p>@SharedLocalizer["menu.name.supportcenter"]</p>
+            <em class="fas fa-angle-left right"></em>
+            <span class="badge badge-info right">11</span>
+        </a>
+    </li>*@
+        <li class="nav-item">
+            <a href="/logout" class="nav-link">
+                <em class="nav-icon fas fa-window-close"></em>
+                <p>@SharedLocalizer["menu.name.logout"]</p>
+            </a>
+        </li>
+    </ul>
+</nav>
+<!-- /.sidebar-menu -->

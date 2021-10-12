@@ -1,0 +1,164 @@
+﻿@model Pospos.AdminUI.Models.TwoWayAuthenticationViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@inject IHtmlLocalizer<SharedResource> SharedLocalizer
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@SharedLocalizer["project.name"]</title>
+
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <!-- Google Font: Source Sans Pro -->
+    <link href="/fonts/SourceSansPro/SourceSansPro.css" rel="stylesheet" />
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition login-page">
+    @await Html.PartialAsync("_Culture")
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="/login"><strong>Pos</strong>Pos</a>
+
+        </div>
+        <!-- /.login-logo -->
+        <div class="card">
+            <div class="card-body login-card-body">
+                @if (!Model.Success && !string.IsNullOrWhiteSpace(Model.Message))
+                {
+                    <div class="help-block text-center text-danger">
+                        @Model.Message
+                        <br />
+                        <br />
+                    </div>
+                }
+                <p class="login-box-msg">@SharedLocalizer["twowayauthentication.form.text"]</p>
+                <form action="/login/two-way-authentication" method="post" id="two-way-authentication-form">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="returnUrl" value="@Model.returnUrl" />
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="code" placeholder="@SharedLocalizer["twowayauthentication.inputtext.placeholder"]" required>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-1 counter">
+                        <span>
+                            <a href="/forgot-password">@SharedLocalizer["forgot.password"]</a>
+                        </span>
+                    </div>
+                    <div class="mb-1 counter-end">
+                        <span>
+                            <a href="#" onclick="ResendLoginCode();">Tekrar kod gönder</a>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            &nbsp;
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary btn-block">@SharedLocalizer["LogIn"]</button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </form>
+            </div>
+            <!-- /.login-card-body -->
+        </div>
+    </div>
+    <!-- /.login-box -->
+    <!-- jQuery -->
+    <script src="/plugins/jquery/jquery.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/dist/js/adminlte.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(function () {
+            ResendCounter();
+        });
+
+        function ResendLoginCode() {
+            var url = "/login/two-way-authentication/resend";
+
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            var data = {
+                __RequestVerificationToken: token
+            };
+
+            $.ajax({
+                type: 'POST',
+                datatype: "json",
+                url: url,
+                data: data,
+                success: function (data) {
+
+                    if (data.success) {
+                        ResendCounter();
+                    }
+                    else {
+                        alert(data.message);
+                    }
+
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+        function ResendCounter () {
+
+            $("div.counter").show();
+            $("div.counter-end").hide();
+
+            var saniye = @Model.Timeout;
+            var sayacYeri = $("div.counter span");
+
+            $.startCounter = function () {
+                if (saniye > 1) {
+                    saniye--;
+                    sayacYeri.text(saniye + " saniye sonra yeniden kod talep edebilirsiniz.");
+                } else {
+                    $("div.counter").hide();
+                    $("div.counter-end").show();
+                }
+            }
+
+            sayacYeri.text(saniye);
+            setInterval("$.startCounter()", 1000);
+
+        };
+
+    </script>
+
+    <script src="https://www.google.com/recaptcha/api.js?render=@Configuration["Google:RecaptchaV3SiteKey"]"></script>
+    <script>
+        grecaptcha.ready(function () {
+            grecaptcha.execute("@Configuration["Google:RecaptchaV3SiteKey"]")
+                .then(function (token) {
+                    //double check
+                    $('#two-way-authentication-form').prepend('<input type="hidden" name="token" value="' + token + '">');
+                    $.getJSON("/RecaptchaV3Vverify?token=" + token, function (data) {
+                        $('#two-way-authentication-form').find("input[type=submit]").prop("disabled", !data);
+                    });
+                });
+        });
+    </script>
+</body>
+</html>

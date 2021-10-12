@@ -1,0 +1,9 @@
+﻿{
+'data': null,
+'render': function(data, type, row) {
+
+if(row.CancellationLevel != 3){return '<a onclick=\"openPaymentCancel(' + row.Id + ')\" class=\"btn btn-outline-block btn-danger btn-sm\"><em class=\"fa fa-ban\"></em>  @SharedLocalizer["button.cancellationrefund"].Value</a>' ;}
+                                          else { return '' ; }
+                                          },
+                                          "orderable" : false
+                                          },

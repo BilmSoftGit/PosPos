@@ -1,0 +1,60 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="tr">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Payment Test</title>
+    <script src="/plugins/jquery/jquery.min.js"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <style type="text/css">
+        .bonusFlash {
+            padding: 0px !important;
+            padding-bottom: 5px !important;
+            padding-right: 10px !important;
+            padding-left: 10px !important;
+        }
+
+            .bonusFlash img {
+                height: 35px;
+            }
+    </style>
+    <link href="/Content/css/bootstrap.css" rel="stylesheet" />
+    <link href="/Content/css/style.css" rel="stylesheet" />
+    <link href="/Content/css/creditcard.css" rel="stylesheet" />
+    <script src="/Content/js/bootstrap.js"></script>
+    <script src="/Content/js/creditcard.js"></script>
+    <script src="/Content/js/moneypoint.js"></script>
+    <link href="/Content/css/moneypoint.css" rel="stylesheet" />
+    <div class="page checkout-page">
+        <div class="page-body checkout-data">
+            <div class="section payment-info">
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <ul id="myTabs" class="nav nav-tabs" role="tablist">
+                            <li class="active">
+                                <a href="#card" aria-controls="" role="tab" data-toggle="tab">
+                                    <img alt="Kredi kartı front" style="width:35px;" src="/Content/images/credit_card_front.png" />
+                                    Kredi Kart Ödeme
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <partial name="~/Views/PaymentTest/_TabCreditCard.cshtml" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

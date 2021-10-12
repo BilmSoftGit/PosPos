@@ -1,0 +1,141 @@
+﻿@model Pospos.AdminUI.Models.CancelPaymentViewModel
+@inject Pospos.Business.Factories.CacheFactory _cacheFactory
+<div class="card card-primary">
+    <form method="post" action="/" id="cancel-payment-form">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="PaymentId" id="PaymentId" value="@Model.Id" />
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    @if (await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PaymentRefundCancellation1))
+                    {
+                        <div class="row">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="icheck-primary">
+                                    <input name="FirstLevelCancelPayment" id="FirstLevelCancelPayment" type="checkbox" @(Model.FirstCancel ? "checked disabled" : "") />
+                                    <label for="FirstLevelCancelPayment">Birinci Seviye İptal Onayı</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="icheck-primary">
+                                    <input name="FirstLevelCancelPayment" id="FirstLevelCancelPayment" type="checkbox" @(Model.FirstCancel ? "checked" : "") disabled />
+                                    <label for="FirstLevelCancelPayment">Birinci Seviye İptal Onayı</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+                        </div>
+                    }
+
+                    @if (await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PaymentRefundCancellation2))
+                    {
+                        <div class="row">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="icheck-primary">
+                                    <input name="SecondLevelCancelPayment" id="SecondLevelCancelPayment" type="checkbox" @(Model.SecondCancel ? "checked disabled" : "") />
+                                    <label for="SecondLevelCancelPayment">İkinci Seviye İptal Onayı</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="icheck-primary">
+                                    <input name="SecondLevelCancelPayment" id="SecondLevelCancelPayment" type="checkbox" @(Model.SecondCancel ? "checked" : "") disabled />
+                                    <label for="SecondLevelCancelPayment">İkinci Seviye İptal Onayı</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+                        </div>
+                    }
+
+                    @if (await _cacheFactory.PermissionControl(Pospos.Core.Common.PanelPermissions.PaymentRefundCancellation3))
+                    {
+                        <div class="row">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="icheck-primary">
+                                    <input name="EndLevelCancelPayment" id="EndLevelCancelPayment" type="checkbox" @(Model.EndCancel ? "checked disabled" : "") />
+                                    <label for="EndLevelCancelPayment">Son Seviye İptal Onayı</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="row">
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-7">
+                                <div class="icheck-primary">
+                                    <input name="EndLevelCancelPayment" id="EndLevelCancelPayment" type="checkbox" @(Model.EndCancel ? "checked" : "") disabled />
+                                    <label for="EndLevelCancelPayment">Son Seviye İptal Onayı</label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#cancel-payment-btn").click(function () {
+            var PaymentId = $('input[name="PaymentId"]').val();
+
+            var url = "/payments/cancel-payment/" + PaymentId;
+            var form_data = $('#cancel-payment-form').serialize();
+
+            console.log(url);
+            console.log($('#FirstLevelCancelPayment').val());
+            console.log(form_data);
+
+            $.ajax({
+                type: 'POST',
+                datatype: "json",
+                url: url,
+                data: form_data,
+                success: function (data) {
+                    if (data.success) {
+                        $('#paymentprocess').DataTable().ajax.reload();
+                        $('#modal-payment-cancel').modal('hide');
+                        swal.fire('Başarılı', data.message, 'success');
+                    } else {
+                        swal.fire('Hata!', data.message, 'error');
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    swal.fire('Hata!', xhr.responseText, 'error');
+                }
+            });
+        });
+
+    });
+</script>

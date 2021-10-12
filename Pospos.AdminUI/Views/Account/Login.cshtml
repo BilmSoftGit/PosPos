@@ -1,0 +1,121 @@
+﻿@model Pospos.AdminUI.Models.LoginViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@inject IHtmlLocalizer<SharedResource> SharedLocalizer
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@SharedLocalizer["project.name"]</title>
+    
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <!-- Google Font: Source Sans Pro -->
+    @*<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">*@
+    <link href="/fonts/SourceSansPro/SourceSansPro.css" rel="stylesheet" />
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition login-page">
+    @await Html.PartialAsync("_Culture")
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="/login"><strong>Pos</strong>Pos</a>
+            
+        </div>
+        <!-- /.login-logo -->
+        <div class="card">
+            <div class="card-body login-card-body">
+                @if (Model.isLoggedOut)
+                {
+                <div class="help-block text-center text-success">
+                    @SharedLocalizer["session.succesfully.ended"]
+                </div>
+                }
+                @if (!Model.Success && !string.IsNullOrWhiteSpace(Model.Message))
+                {
+                    <div class="help-block text-center text-danger">
+                        @Model.Message
+                        <br />
+                        <br />
+                    </div>
+                }
+            <p class="login-box-msg">@SharedLocalizer["login.fullfill.form"]</p>
+                <form action="/login" method="post" id="login-form">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="returnUrl" value="@Model.returnUrl" />
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control" name="email" placeholder="@SharedLocalizer["username"]" required>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="password" class="form-control" name="password" placeholder="@SharedLocalizer["password"]" required>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="icheck-primary">
+                                <input type="checkbox" id="remember">
+                                <label for="remember">
+                                    @SharedLocalizer["remember"]
+                                </label>
+                            </div>
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary btn-block">@SharedLocalizer["LogIn"]</button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </form>
+
+                <p class="mb-1">
+                    <a href="/forgot-password">@SharedLocalizer["forgot.password"]</a>
+                </p>
+
+                <p class="mb-0">
+                    <a href="/register">@SharedLocalizer["register"]</a>
+                </p>
+            </div>
+            <!-- /.login-card-body -->
+        </div>
+    </div>
+    <!-- /.login-box -->
+    <!-- jQuery -->
+    <script src="/plugins/jquery/jquery.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="/dist/js/adminlte.min.js"></script>
+
+    <script src="https://www.google.com/recaptcha/api.js?render=@Configuration["Google:RecaptchaV3SiteKey"]"></script>
+    <script>
+        grecaptcha.ready(function () {
+            grecaptcha.execute("@Configuration["Google:RecaptchaV3SiteKey"]")
+                .then(function (token) {
+                    //double check
+                    $('#login-form').prepend('<input type="hidden" name="token" value="' + token + '">');
+                    $.getJSON("/RecaptchaV3Vverify?token=" + token, function (data) {
+                        $('#login-form').find("input[type=submit]").prop("disabled", !data);
+                    });
+                });
+        });
+    </script>
+</body>
+</html>

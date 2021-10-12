@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pospos.Core\Pospos.Core.csproj" />
+    <ProjectReference Include="..\Pospos.Data\Pospos.Data.csproj" />
+    <ProjectReference Include="..\Pospos.Domain\Pospos.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

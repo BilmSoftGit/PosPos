@@ -1,0 +1,288 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="approvecontacts.button" xml:space="preserve">
+    <value>Doğrula</value>
+  </data>
+  <data name="approvecontacts.emailsmstoken.text" xml:space="preserve">
+    <value>Lütfen E-Posta ve SMS ile gönderilen doğrulama kodlarını girdikten sonra "Doğrula" butonunu kullanın.</value>
+  </data>
+  <data name="approvecontacts.emailtoken.placeholder" xml:space="preserve">
+    <value>E-Posta Doğrulama Kodu</value>
+  </data>
+  <data name="approvecontacts.emailtoken.text" xml:space="preserve">
+    <value>Lütfen E-Posta ile gönderilen doğrulama kodunu girdikten sonra "Doğrula" butonunu kullanın.</value>
+  </data>
+  <data name="approvecontacts.smstoken.placeholder" xml:space="preserve">
+    <value>SMS Doğrulama Kodu</value>
+  </data>
+  <data name="approvecontacts.smstoken.text" xml:space="preserve">
+    <value>Lütfen SMS ile gönderilen doğrulama kodunu girdikten sonra "Doğrula" butonunu kullanın.</value>
+  </data>
+  <data name="bank" xml:space="preserve">
+    <value>Banka</value>
+  </data>
+  <data name="button.cancellationrefund" xml:space="preserve">
+    <value>İptal/İade</value>
+  </data>
+  <data name="button.detail" xml:space="preserve">
+    <value>Detay</value>
+  </data>
+  <data name="button.no.cancel" xml:space="preserve">
+    <value>Vazgeç</value>
+  </data>
+  <data name="button.search" xml:space="preserve">
+    <value>Ara</value>
+  </data>
+  <data name="button.yes.cancel" xml:space="preserve">
+    <value>Evet, İptal/İade</value>
+  </data>
+  <data name="cardholder" xml:space="preserve">
+    <value>Kart Sahibi</value>
+  </data>
+  <data name="cardnumber.example" xml:space="preserve">
+    <value>123456</value>
+  </data>
+  <data name="cardnumber.firstcharacter" xml:space="preserve">
+    <value>Kart Numarası (İlk 6 Hanesi)</value>
+  </data>
+  <data name="datatables.payment.columns.companyname" xml:space="preserve">
+    <value>Firma Adı</value>
+  </data>
+  <data name="emailaddress" xml:space="preserve">
+    <value>E-posta adresiniz</value>
+  </data>
+  <data name="forgot.password" xml:space="preserve">
+    <value>Şifremi unuttum</value>
+  </data>
+  <data name="LogIn" xml:space="preserve">
+    <value>Giriş Yap</value>
+  </data>
+  <data name="login.fullfill.form" xml:space="preserve">
+    <value>Lütfen bilgilerinizi girerek giriş yapınız</value>
+  </data>
+  <data name="menu.name.approved" xml:space="preserve">
+    <value>Onaylanmış Ödemeler</value>
+  </data>
+  <data name="menu.name.loginpage" xml:space="preserve">
+    <value>Giriş Ekranı</value>
+  </data>
+  <data name="menu.name.logout" xml:space="preserve">
+    <value>Oturumu Kapat</value>
+  </data>
+  <data name="menu.name.memberbusinesses" xml:space="preserve">
+    <value>Üye İşyerleri</value>
+  </data>
+  <data name="menu.name.payment" xml:space="preserve">
+    <value>Tüm Ödemeler</value>
+  </data>
+  <data name="menu.name.paymentsrefundcancel" xml:space="preserve">
+    <value>İade ve İptaller</value>
+  </data>
+  <data name="menu.name.pendingapproval" xml:space="preserve">
+    <value>Bekleyenler Ödemeler</value>
+  </data>
+  <data name="menu.name.pendingbankapproval" xml:space="preserve">
+    <value>Banka Onayı Bekleyenler</value>
+  </data>
+  <data name="menu.name.roles" xml:space="preserve">
+    <value>Roller</value>
+  </data>
+  <data name="menu.name.rolespermissions" xml:space="preserve">
+    <value>Roller ve Yetkiler</value>
+  </data>
+  <data name="menu.name.settings" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="menu.name.settingsbank" xml:space="preserve">
+    <value>Banka Ayarları</value>
+  </data>
+  <data name="menu.name.settingspanel" xml:space="preserve">
+    <value>Panel Ayarları</value>
+  </data>
+  <data name="menu.name.settingspayment" xml:space="preserve">
+    <value>Ödeme Ayarları</value>
+  </data>
+  <data name="menu.name.successpayments" xml:space="preserve">
+    <value>Başarılı Ödemeler</value>
+  </data>
+  <data name="menu.name.supportcenter" xml:space="preserve">
+    <value>Destek Merkezi</value>
+  </data>
+  <data name="menu.name.unsuccesspayments" xml:space="preserve">
+    <value>Başarısız Ödemeler</value>
+  </data>
+  <data name="menu.name.usermanagement" xml:space="preserve">
+    <value>Kullanıcı Yönetimi</value>
+  </data>
+  <data name="menu.name.users" xml:space="preserve">
+    <value>Kullanıcılar</value>
+  </data>
+  <data name="password" xml:space="preserve">
+    <value>Şifre</value>
+  </data>
+  <data name="payment.list.question.cancel" xml:space="preserve">
+    <value>Eğer yetkiniz dahilinde değil ise iptal/iade talebi bir üst yetkiye aktarılacaktır. Aksi taktirde iptal/iade işlemi direk başlatılacaktır.&lt;br /&gt;&lt;br /&gt;İptal/iade işlemini başlatmak istediğinize emin misiniz?</value>
+  </data>
+  <data name="payment.list.question.canceledprocess" xml:space="preserve">
+    <value>İşlemden vazgeçildi</value>
+  </data>
+  <data name="payments.cardfooter.text" xml:space="preserve">
+    <value>Arama sonuçlarının görüntülenmesi kısa bir süre alabilir. Lütfen "Ara" dedikten sonra bekleyin.</value>
+  </data>
+  <data name="payments.list.subtitle" xml:space="preserve">
+    <value>Filtreleme (Arama)</value>
+  </data>
+  <data name="payments.list.success.title" xml:space="preserve">
+    <value>Başarılı Ödemeler</value>
+  </data>
+  <data name="payments.list.title" xml:space="preserve">
+    <value>Onaylanmış Ödemeler</value>
+  </data>
+  <data name="payments.list.unsuccess.title" xml:space="preserve">
+    <value>Başarısız Ödemeler</value>
+  </data>
+  <data name="pleasechose" xml:space="preserve">
+    <value>Lütfen Seçiniz...</value>
+  </data>
+  <data name="pos" xml:space="preserve">
+    <value>Pos</value>
+  </data>
+  <data name="project.name" xml:space="preserve">
+    <value>PosPos - Yönetim Paneli</value>
+  </data>
+  <data name="register" xml:space="preserve">
+    <value>Yeni üye işyeri kaydı</value>
+  </data>
+  <data name="remember" xml:space="preserve">
+    <value>Beni Hatırla</value>
+  </data>
+  <data name="session.succesfully.ended" xml:space="preserve">
+    <value>Oturumunuz başarılı bir şekilde sonlandırıldı.</value>
+  </data>
+  <data name="twowayauthentication.form.text" xml:space="preserve">
+    <value>Lütfen cep telefonunuza gönderilen kodu girin.</value>
+  </data>
+  <data name="twowayauthentication.inputtext.placeholder" xml:space="preserve">
+    <value>SMS Onay Kodu</value>
+  </data>
+  <data name="username" xml:space="preserve">
+    <value>Kullanıcı Adı</value>
+  </data>
+</root>

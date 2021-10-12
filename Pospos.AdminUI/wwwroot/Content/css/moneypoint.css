@@ -1,0 +1,103 @@
+﻿.checkBonusHolder {
+    clear: both;
+    padding: 5px;
+    display: none;
+}
+
+#checkBonus {
+    margin: 0;
+    left: 10px;
+    top: 2px;
+}
+
+.button-money-point {
+    -moz-box-shadow: inset 0px 1px 3px 0px #91b8b3;
+    -webkit-box-shadow: inset 0px 1px 3px 0px #91b8b3;
+    box-shadow: inset 0px 1px 3px 0px #91b8b3;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #768d87), color-stop(1, #6c7c7c));
+    background: -moz-linear-gradient(top, #768d87 5%, #6c7c7c 100%);
+    background: -webkit-linear-gradient(top, #768d87 5%, #6c7c7c 100%);
+    background: -o-linear-gradient(top, #768d87 5%, #6c7c7c 100%);
+    background: linear-gradient(to bottom, #768d87 5%, #6c7c7c 100%);
+    background-color: #768d87;
+    border: 1px solid #566963;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial, Helvetica, Tahoma, Verdana, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 7px;
+    text-decoration: none;
+    text-shadow: 0px -1px 0px #2b665e;
+}
+
+    .button-money-point:hover {
+        background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #6c7c7c), color-stop(1, #768d87));
+        background: -moz-linear-gradient(top, #6c7c7c 5%, #768d87 100%);
+        background: -webkit-linear-gradient(top, #6c7c7c 5%, #768d87 100%);
+        background: -o-linear-gradient(top, #6c7c7c 5%, #768d87 100%);
+        background: linear-gradient(to bottom, #6c7c7c 5%, #768d87 100%);
+        background-color: #6c7c7c;
+    }
+
+select#ExpireMonth {
+    width: 75px !important;
+}
+
+select#ExpireYear {
+    width: 75px !important;
+}
+
+#PointContainer {
+    border: 2px solid #d1e7be;
+    margin: 15px 0 15px 0px;
+    padding: 3px;
+    overflow: hidden;
+}
+
+    #PointContainer > div {
+        display: block;
+        height: 45px;
+    }
+
+        #PointContainer > div > div {
+            background: #f1f8e8;
+            float: left;
+            height: 45px;
+            width: 100%;
+        }
+
+    #PointContainer .bonusAmount {
+        float: left;
+        height: 39px;
+        padding-top: 0px;
+        width: 130px;
+        text-align: center;
+    }
+
+        #PointContainer .bonusAmount label {
+            color: #424242;
+            display: block;
+            font-size: 12px;
+            font-weight: initial;
+        }
+
+        #PointContainer .bonusAmount span {
+            color: #61a400;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+    #PointContainer > div > div > label {
+        color: #424242;
+        font-size: 12px;
+        float: left;
+        position: relative;
+        top: 15px;
+        font-weight: initial;
+    }
+
+#rewardUseAllPoints {
+    margin: 0px;
+}

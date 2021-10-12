@@ -1,0 +1,559 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+#btnPay 
+{
+    float:left;
+}
+#btnPayuPay 
+{
+    float:left;
+}
+#cardLogo{
+    display:none;
+}
+#cardMessage{
+    color:red;
+}
+#CardholderName {
+    width: 165px;
+    height:30px;
+}
+#CardCode{
+    width: 60px;
+}
+.ValidDiv div{
+    margin-right: 20px; 
+    float: left;
+}
+#attachmentForm .payment-info-next-step-button{
+   float:left;
+}
+strong, b {
+    font-weight: bold;
+}
+
+.ShoppingTotal strong.price {
+    font-size: 20px;
+}
+
+.ShoppingTotal strong {
+    font-size: 18px;
+    color: #181825;
+}
+
+sup {
+    text-decoration: underline;
+    font-size: 11px;
+    vertical-align: super;
+}
+
+.button {
+    padding: 5px 10px;
+    display: inline;
+    background: #777 url(button.png) repeat-x bottom;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    text-shadow: 1px 1px #666;
+}
+
+    .button:hover {
+        background-position: 0 center;
+    }
+
+    .button:active {
+        background-position: 0 top;
+        position: relative;
+        top: 1px;
+        padding: 6px 10px 4px;
+    }
+
+    .button.red {
+        background-color: #e50000;
+    }
+
+    .button.purple {
+        background-color: #9400bf;
+    }
+
+    .button.green {
+        background-color: #58aa00;
+    }
+
+        .button.green.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: default;
+        }
+
+a.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
+}
+
+.button.orange {
+    background-color: #ff9c00;
+}
+
+.button.blue {
+    background-color: #2c6da0;
+}
+
+.button.black {
+    background-color: #333;
+}
+
+.button.white {
+    background-color: #fff;
+    color: #000;
+    text-shadow: 1px 1px #fff;
+}
+
+.button.small {
+    font-size: 75%;
+    padding: 3px 7px;
+}
+
+    .button.small:active {
+        padding: 4px 7px 2px;
+        background-position: 0 top;
+    }
+
+.button.large {
+    font-size: 125%;
+    padding: 7px 12px;
+}
+
+    .button.large:active {
+        padding: 8px 12px 6px;
+        background-position: 0 top;
+    }
+
+.radiobutton {
+    margin-right: 2px;
+    vertical-align: middle;
+    float: left;
+    margin-top: 3px;
+    margin-left: 3px;
+}
+
+.kartgobek {
+    height: 181px;
+    width: 590px;
+    position: relative;
+}
+
+.solkart {
+    height: 180px;
+    width: 286px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    background-image: url(https://payment.sanalmagaza.com/Content/images/card_sample.png);
+    background-repeat: no-repeat;
+    background-position: left top;
+}
+
+.sagkart {
+    height: 182px;
+    width: 286px;
+    position: absolute;
+    left: 296px;
+    top: 0px;
+    background-image: url(https://payment.sanalmagaza.com/Content/images/card_sample.png);
+    background-position: 0px -188px;
+    background-repeat: no-repeat;
+}
+
+.cardLogo {
+    margin-top: 10px;
+    margin-right: 5px;
+    margin-bottom: 0px;
+    margin-left: 10px;
+}
+
+.creditCardNo {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    color: #519AD1;
+    font-size: 14px;
+    padding-left: 12px;
+    line-height: 10px;
+    text-indent: 5px;
+    float: left;
+    margin-top: 45px;
+}
+
+    .creditCardNo ul {
+        float: left;
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+
+    .creditCardNo li {
+        list-style-type: none;
+        float: left;
+        padding-bottom: 3px;
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 3px;
+        margin: 0px 5px;
+    }
+
+    .creditCardNo input:focus {
+        line-height: 16px;
+    }
+
+.validTitle {
+    float: left;
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    margin-top: 20px;
+    line-height: 12px;
+    padding-left: 10px;
+}
+
+.ValidDiv > div {
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px !important;
+}
+
+    .ValidDiv > div > select {
+        height: 30px !important;
+        font-size: 11px !important;
+        font-weight: bold;
+    }
+
+select#ExpireMonth {
+    width: 40px !important;
+}
+
+select#ExpireYear {
+    width: 87px !important;
+}
+
+.ValidDiv {
+    left: 1%;
+    position: absolute;
+    top: 50%;
+}
+
+.creditCardOwner {
+    height: 30px;
+    left: 4%;
+    position: absolute;
+    top: 79%;
+    width: 170px;
+}
+
+.kartgobek #solkartdiv .creditCardOwner > input {
+    height: 30px !important;
+    font-size: 15px !important;
+}
+
+.creditCardBank {
+    height: 50px;
+    left: 10px;
+    position: absolute;
+    top: 10px;
+    width: 50px;
+}
+
+.creditCardType {
+    height: 55px;
+    left: 215px;
+    position: absolute;
+    top: 145px;
+    width: 55px;
+}
+
+.backCardContent {
+    margin-left: 14%;
+    margin-top: 28%;
+}
+
+.cvc2:focus {
+    line-height: 16px;
+}
+
+.cardHolderNameNotFocused {
+    color: #999999;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.kartgobek .sagkart .backCardContent > input {
+    height: 30px !important;
+    font-size: 11px !important;
+    font-weight: bold;
+    margin-top: 2px;
+}
+
+.dopaymentbox {
+    border: 1px solid #DDDDDD;
+    height: 100%;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    overflow: hidden;
+    width: auto;
+}
+
+.dopaymentboxtitle .right {
+    background: url("https://payment.sanalmagaza.com/Content/images/dopayment_trans.png") no-repeat scroll left center transparent;
+    display: block;
+    float: right;
+    height: 30px;
+    line-height: 30px;
+    margin-right: 4px;
+    margin-top: 5px;
+    text-indent: 40px;
+    width: 115px;
+}
+
+.fontboldgray {
+    color: #7D7D7D;
+    font-family: Tahoma, Helvetica, Arial, Verdana, sans-serif;
+    font-size: 11px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.dopaymentboxtitle .left {
+    display: block;
+    float: left;
+    height: 33px;
+    line-height: 33px;
+    margin-left: 4px;
+    margin-top: 3px;
+    /*text-indent: 40px;*/
+    font-size:12px;
+}
+
+.radiobutton {
+    margin-right: 2px;
+    vertical-align: middle;
+}
+
+.singleLineoption {
+    background: url(https://payment.sanalmagaza.com/Content/images/blockline_bg.jpg) repeat-x scroll center top transparent;
+    border: 1px solid #ECECEC;
+    margin: 2px 2px 1px;
+    color: #7D7D7D;
+    height: 20px;
+    line-height: 20px;
+    width: auto !important;
+    /*padding: 0px 5px 0px 5px !important;*/
+}
+
+.rightspan {
+    float: right;
+    font-weight: bold;
+    text-align: left;
+}
+
+.width170px {
+    width: 170px;
+}
+
+.marginright {
+    margin-right: 80px;
+}
+
+.leftside {
+    float: left;
+    width: 50%;
+}
+
+.rightside {
+    float: left;
+    width: 50%;
+}
+
+.cardtype {
+    vertical-align: middle;
+}
+
+.middlespan {
+    float: left;
+    font-weight: normal;
+    min-width: 100px;
+}
+
+.options {
+    clear: left;
+    cursor: pointer;
+    float: left;
+    margin-right: 0;
+    width: 320px;
+}
+
+.leftspan {
+    float: left;
+    font-weight: bold;
+    min-width: 100px;
+}
+
+.middlespan {
+    float: left;
+    font-weight: normal;
+    min-width: 100px;
+}
+
+.rightspan {
+    float: right;
+    font-weight: bold;
+    text-align: left;
+}
+
+.dopaymentboxtitle {
+    background: url("https://payment.sanalmagaza.com/Content/images/blocktitle.gif") repeat-x scroll center center transparent;
+    height: 39px;
+}
+
+.WORLDYENI .options {
+    color: #7bae00;
+    font-family: Tahoma, Helvetica, Arial, Verdana, sans-serif;
+}
+
+.WORLDYENI .tek {
+    background: #7bae00;
+    color: #ffffff;
+}
+
+.WORLDYENI .options:hover {
+    background: #7bae00;
+    color: #ffffff;
+}
+
+.dopaymentboxtitle {
+    background: url("https://payment.sanalmagaza.com/Content/images/blocktitle.gif") repeat-x scroll center center transparent;
+    height: 39px;
+}
+
+.cvc2 {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-bottom-color: #D5D3D4;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-image-outset: 0 0 0 0;
+    border-image-repeat: stretch stretch;
+    border-image-slice: 100% 100% 100% 100%;
+    border-image-source: none;
+    border-image-width: 1 1 1 1;
+    border-left-color: #D5D3D4;
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-color: #D5D3D4;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-color: #D5D3D4;
+    border-top-style: solid;
+    border-top-width: 1px;
+    color: #519AD1;
+    font-size: 14px;
+    height: 24px;
+    line-height: 24px;
+    text-indent: 5px;
+    margin-left: 10px;
+    width: 50px;
+}
+
+.cardHolderName {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-bottom-color: #D5D3D4;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-image-outset: 0 0 0 0;
+    border-image-repeat: stretch stretch;
+    border-image-slice: 100% 100% 100% 100%;
+    border-image-source: none;
+    border-image-width: 1 1 1 1;
+    border-left-color: #D5D3D4;
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-color: #D5D3D4;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-color: #D5D3D4;
+    border-top-style: solid;
+    border-top-width: 1px;
+    color: #519AD1;
+    font-size: 14px;
+    height: 20px;
+    line-height: 20px;
+    text-indent: 5px;
+}
+
+.kartgobek input[type="text"]:focus {
+    -moz-border-bottom-colors: none !important;
+    -moz-border-left-colors: none !important;
+    -moz-border-right-colors: none !important;
+    -moz-border-top-colors: none !important;
+    border-bottom-color: #91BDE3 !important;
+    border-bottom-style: solid !important;
+    border-bottom-width: 1px !important;
+    border-image-outset: 0 0 0 0 !important;
+    border-image-repeat: stretch stretch !important;
+    border-image-slice: 100% 100% 100% 100% !important;
+    border-image-source: none !important;
+    border-image-width: 1 1 1 1 !important;
+    border-left-color: #91BDE3 !important;
+    border-left-style: solid !important;
+    border-left-width: 1px !important;
+    border-right-color: #91BDE3 !important;
+    border-right-style: solid !important;
+    border-right-width: 1px !important;
+    border-top-color: #91BDE3 !important;
+    border-top-style: solid !important;
+    border-top-width: 1px !important;
+    box-shadow: 0 0 1px 3px rgba(118, 173, 220, 0.8);
+    outline-color: -moz-use-text-color;
+    outline-style: none;
+    outline-width: 0;
+}
+
+.creditCardNo input {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-bottom-color: #D5D3D4;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-image-outset: 0 0 0 0;
+    border-image-repeat: stretch stretch;
+    border-image-slice: 100% 100% 100% 100%;
+    border-image-source: none;
+    border-image-width: 1 1 1 1;
+    border-left-color: #D5D3D4;
+    border-left-style: solid;
+    border-left-width: 1px;
+    border-right-color: #D5D3D4;
+    border-right-style: solid;
+    border-right-width: 1px;
+    border-top-color: #D5D3D4;
+    border-top-style: solid;
+    border-top-width: 1px;
+    color: #519AD1;
+    font-size: 14px;
+    line-height: 11px;
+    float: left;
+    width: 50px;
+    height: 30px;
+}

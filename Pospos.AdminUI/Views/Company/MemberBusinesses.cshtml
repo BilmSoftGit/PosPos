@@ -1,0 +1,229 @@
+﻿
+@{
+    ViewData["Title"] = "MemberBusinesses";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section HeaderSection
+{
+    <link href="/plugins/datatables2/datatables.min.css" rel="stylesheet" />
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Üye İşyerleri</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                    <li class="breadcrumb-item active">Üye İşyerleri</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="content">
+    @Html.AntiForgeryToken()
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <a class="btn btn-primary btn-block" href="/member-businesses">
+                                    <em class="fas fa-building"></em> Tüm Firmalar
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a class="btn btn-secondary btn-block" href="/member-businesses/create-update">
+                                    <em class="fas fa-plus"></em> Yeni Firma Ekle
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table id="users" class="display" style="width:100%">
+                            <caption>Üye İşyerleri</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Cari Kodu</th>
+                                    <th scope="col">Firma Adı</th>
+                                    <th scope="col">İl/İlçe</th>
+                                    <th scope="col">Vergi Dairesi</th>
+                                    <th scope="col">Vergi Numarası</th>
+                                    <th scope="col">Adresi</th>
+                                    <th scope="col">Tarih</th>
+                                    <th scope="col">Onay Durumu</th>
+                                    <th scope="col">Durum</th>
+                                    <th scope="col">Düzenle</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section FooterSection
+{
+    <script src="/plugins/datatables2/datatables.min.js"></script>
+    <script src="/js/moment.min.js"></script>
+
+    <script type="text/javascript">
+
+        var token = $('input[name="__RequestVerificationToken"]').val();
+
+        function companyApprove(id, status) {
+            Swal.fire({
+                title: 'Firmanın onay durumunu değiştirmek istediğinize emin misiniz?',
+                showDenyButton: false,
+                showCancelButton: true,
+                confirmButtonText: 'Evet, Değiştir',
+                cancelButtonText: 'İptal',
+            })
+                .then((willDelete) => {
+                    if (willDelete.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            datatype: "json",
+                            url: '/company/active-passive-company',
+                            data: {
+                                Id: id,
+                                IsApproved: status,
+                                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (data) {
+                                if (data.success) {
+                                    swal.fire('Başarılı', 'Kayıt başarıyla güncellendi?', 'success');
+                                    $('#users').DataTable().ajax.reload();
+                                }
+                                else {
+                                    swal.fire('Hata Oluştu!', 'İşlem sırasında hata oluştu?', 'warning');
+                                    return false;
+                                }
+                            }
+                        });
+                    } else {
+                        swal.fire("İşlem iptal edildi.");
+                    }
+                });
+        }
+
+        $(document).ready(function () {
+
+            function companyApprove(id, status) {
+                Swal.fire({
+                    title: 'Firmanın onay durumunu değiştirmek istediğinize emin misiniz?',
+                    showDenyButton: false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Evet, Değiştir',
+                    cancelButtonText: 'İptal',
+                })
+                    .then((willDelete) => {
+                        if (willDelete.isConfirmed) {
+                            $.ajax({
+                                type: 'POST',
+                                datatype: "json",
+                                url: '/company/active-passive-company',
+                                data: {
+                                    Id: id,
+                                    IsApproved: status,
+                                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                                },
+                                success: function (data) {
+                                    if (data.success) {
+                                        swal.fire('Başarılı', 'Kayıt başarıyla güncellendi?', 'success');
+                                        $('#users').DataTable().ajax.reload();
+                                    }
+                                    else {
+                                        swal.fire('Hata Oluştu!', 'İşlem sırasında hata oluştu?', 'warning');
+                                        return false;
+                                    }
+                                }
+                            });
+                        } else {
+                            swal.fire("İşlem iptal edildi.");
+                        }
+                    });
+            }
+
+
+            $('#users').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "pageLength": 25,
+                "ajax": {
+                    "url": "/member-businesses",
+                    "type": "POST",
+                    "data": {
+                        __RequestVerificationToken: token
+                    }
+                },
+                "columns": [
+                    { "data": "Id", "name": "Id", "autoWidth": true },
+                    { "data": "CompanyCode", "name": "CompanyCode", "autoWidth": true },
+                    { "data": "CompanyName", "name": "CompanyName", "autoWidth": true },
+                    {
+                        "data": null, "name": "CityId", "autoWidth": true,
+                        "render": function (data, type, row) {
+                            return data.CityName + " / " + data.DistrictName
+                        } },
+                    { "data": "TaxOffice", "name": "TaxOffice", "autoWidth": true },
+                    { "data": "TaxNumber", "name": "TaxNumber", "autoWidth": true },
+                    { "data": "Address", "name": "Address", "autoWidth": true },
+                    { "data": "InsertDate", "name": "InsertDate", "autoWidth": true },
+                    {
+                        "data": "IsApproved", "name": "IsApproved", "autoWidth": true,
+                        "render": function (data, type, row) {
+                            if (row.IsApproved === true) {
+                                return 'Onaylı'
+                            } else {
+                                return 'Onay Bekliyor'
+                            }
+                        }
+                    },
+                    {
+                        'data': null,
+                        'render': function (data, type, row) {
+                            if (row.IsApproved === true) {
+                                return '<button type="button" onclick="companyApprove(' + row.Id + ', false)" class="btn btn-outline-block bg-gradient-success btn-sm"><em class="fa fa-check-square"></em> Engelle</button>'
+                            } else {
+                                return '<button type="button" onclick="companyApprove(' + row.Id + ', true)" class="btn btn-outline-block bg-gradient-danger btn-sm"><em class="fa fa-square"></em> Onayla</button>'
+                            }
+                        },
+                        "orderable": false
+                    },
+                    {
+                        'data': null,
+                        'render': function (data, type, row) {
+                            return '<a href="/member-businesses/create-update?editId=' + row.Id + '" class="btn btn-outline-block btn-default btn-sm"><em class="fa fa-edit"></em> Düzenle</a>';
+                        },
+                        "orderable": false
+                    }
+                ],
+                columnDefs: [{
+                    targets: 7, render: function (data) {
+                        return moment(data).format('DD/MM/YYYY');
+                    }
+                }],
+                "language": {
+                    "url": "/js/datatables-tr.json"
+                }
+            });
+        });
+    </script>
+}

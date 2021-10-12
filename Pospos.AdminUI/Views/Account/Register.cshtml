@@ -1,0 +1,227 @@
+﻿@model Pospos.AdminUI.Models.RegisterViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PosPos | Kayıt Ol</title>
+
+    @*<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">*@
+    <link href="/fonts/SourceSansPro/SourceSansPro.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+
+    <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+</head>
+<body class="hold-transition register-page">
+    <div class="register-box" style="width: 640px !important;">
+        <div class="register-logo">
+            <a href="/login"><strong>Pos</strong>Pos</a>
+        </div>
+
+        <div class="card">
+            <div class="card-body register-card-body">
+                @if (!Model.Success && !string.IsNullOrWhiteSpace(Model.Message))
+                {
+                    <div class="help-block text-center text-danger">
+                        @Model.Message
+                        <br />
+                        <br />
+                    </div>
+                }
+                @if (Model.Success)
+                {
+                    <div class="help-block text-center text-success">
+                        @Model.Message
+                        <br />
+                        <br />
+                    </div>
+                }
+                <p class="login-box-msg">Üye işyeri olarak kayıt olun. Kayıt işleminin sonunda PosPos Genel Merkez tarafından üyeliğiniz onaylandıktan sonra giriş yapabilirsiniz.</p>
+
+                <form action="/register" method="post">
+                    <div class="row">
+                        @Html.AntiForgeryToken()
+                        <div class="input-group mb-3 col-md-12">
+                            <input type="text" class="form-control" name="CompanyName" placeholder="Firma Adı" required>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-home"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3 col-md-6">
+                            <input type="text" class="form-control" name="Name" placeholder="Adı" required>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-user"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3 col-md-6">
+                            <input type="text" class="form-control" name="Surname" placeholder="Soyadı" required>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-user"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3 col-md-6">
+                            <input type="email" class="form-control" name="EMail" placeholder="E-Posta Adresi">
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-mail-bulk"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3 col-md-6">
+                            <input type="text" class="form-control" name="PhoneNumber" placeholder="Cep Telefonu" data-inputmask='"mask": "(999) 999-9999"' data-mask>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-phone"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group mb-6 col-md-6">
+                            <select id="cities" class="form-control select2bs4" name="CityId" style="width: 100% !important;" required>
+                                @if (!Model.Cities.Any(x => x.DefaultValue))
+                                {
+                                    <option selected="selected" value="">Şehir Seçiniz...</option>
+                                }
+
+                                @foreach (var city in Model.Cities)
+                                {
+                                    if (city.DefaultValue)
+                                    {
+                                        <option selected="selected" value="@city.Id">@city.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@city.Id">@city.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="input-group mb-6 col-md-6">
+                            <select id="districts" class="form-control select2bs4" name="DistrictId" style="width: 100% !important;" required>
+                                <option selected="selected" value="">İlçe Seçiniz...</option>
+                            </select>
+                        </div>
+                        <div class="input-group mb-3 col-md-12" style="margin-top: 20px;">
+                            <input type="text" class="form-control" name="Address" placeholder="Şirket Adresi" required>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-address-card"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3 col-md-6">
+                            <input type="text" class="form-control" name="TaxOffice" placeholder="Vergi Dairesi" required>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-location-arrow"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3 col-md-6">
+                            <input type="text" class="form-control" name="TaxNumber" id="TaxNumber" placeholder="Vergi Numarası" maxlength="11" required>
+                            <div class="input-group-append">
+                                <div class="input-group-text">
+                                    <span class="fas fa-coins"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class=" col-md-12">
+                            <div class="icheck-primary">
+                                <input type="checkbox" id="agreeTerms" name="chkApprove" value="agree" required>
+                                <label for="agreeTerms">
+                                    <a href="#">Üyelik sözleşmesini</a> okudum onaylıyorum
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary btn-block">Üye Ol</button>
+                        </div>
+                    </div>
+                </form>
+
+                <a href="/login" class="text-center">Zaten bir üyeliğim var</a>
+            </div>
+        </div>
+    </div>
+    <script src="/plugins/jquery/jquery.min.js"></script>
+    <script src="/dist/js/adminlte.min.js"></script>
+    <script src="/plugins/select2/js/select2.full.min.js"></script>
+    <script src="/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
+    <script src="/plugins/moment/moment.min.js"></script>
+    <script src="/plugins/inputmask/jquery.inputmask.min.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+
+            $('[data-mask]').inputmask();
+
+            $("#TaxNumber").inputFilter(function (value) {
+                return /^\d*$/.test(value);    // Allow digits only, using a RegExp
+            });
+
+            $('#cities').select2({
+                theme: 'bootstrap4'
+            });
+
+            var element = $('#districts').select2({
+                theme: 'bootstrap4'
+            });
+
+            $('#cities').on('change', function () {
+                var cityId = $("#cities option:selected").val();
+                var token = $('input[name="__RequestVerificationToken"]').val();
+                var data = {
+                    "__RequestVerificationToken": token,
+                    "cityId": cityId
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/get-districts",
+                    data: data,
+                    success: function (data) {
+                        //console.log(data.items);
+                        element.val("");
+                        element.find('option').remove();
+                        $.each(data.items, function (index, value) {
+                            element.append('<option value="' + value.id + '">' + value.text + '</option>');
+                        });
+                    },
+                    error: function (hata, ajaxOptions, thrownError) {
+
+                    }
+                });
+            });
+        });
+
+        // Restricts input for the set of matched elements to the given inputFilter function.
+        (function ($) {
+            $.fn.inputFilter = function (inputFilter) {
+                return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function () {
+                    if (inputFilter(this.value)) {
+                        this.oldValue = this.value;
+                        this.oldSelectionStart = this.selectionStart;
+                        this.oldSelectionEnd = this.selectionEnd;
+                    } else if (this.hasOwnProperty("oldValue")) {
+                        this.value = this.oldValue;
+                        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+                    } else {
+                        this.value = "";
+                    }
+                });
+            };
+        }(jQuery));
+    </script>
+</body>
+</html>

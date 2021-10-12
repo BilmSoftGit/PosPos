@@ -1,0 +1,274 @@
+﻿@model Pospos.AdminUI.Models.PaymentFromBankListViewModel
+
+@{
+    ViewData["Title"] = "PaymentFromBankList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section HeaderSection
+{
+    <link rel="stylesheet" href="/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <link href="/plugins/datatables2/datatables.min.css" rel="stylesheet" />
+
+    <style type="text/css">
+        .modal-dialog {
+            max-width: 800px !important;
+        }
+    </style>
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Banka Onayı Bekleyen Ödemeler</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/">Anasayfa</a></li>
+                    <li class="breadcrumb-item active">Onay Bekleyen Ödemeler</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="content">
+    @Html.AntiForgeryToken()
+    <div class="container-fluid">
+        <div class="card card-default">
+            <div class="card-header">
+                <h3 class="card-title">Filtreleme (Arama)</h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <em class="fas fa-minus"></em>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <em class="fas fa-times"></em>
+                    </button>
+                </div>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body" id="searchBox">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">@SharedLocalizer["username"]</label>
+                            <input type="text" class="form-control" id="Username" name="Username" placeholder="@SharedLocalizer["username"]" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">@SharedLocalizer["cardholder"]</label>
+                            <input type="text" class="form-control" id="CardHolder" name="CardHolder" placeholder="@SharedLocalizer["cardholder"]" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">@SharedLocalizer["cardnumber.firstcharacter"]</label>
+                            <input type="text" class="form-control" id="CardNumber" name="CardNumber" placeholder="@SharedLocalizer["cardnumber.example"]" value="" maxlength="6">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="BankId">@SharedLocalizer["bank"]</label>
+                            <select id="BankId" class="form-control select2bs4" name="BankId" style="width: 100% !important;">
+                                <option value="" selected>@SharedLocalizer["pleasechose"]</option>
+                                @foreach (var bank in Model.Banks)
+                                {
+                                    <option value="@bank.Id">@bank.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="PosId">@SharedLocalizer["pos"]</label>
+                            <select id="PosId" class="form-control select2bs4" name="PosId" style="width: 100% !important;">
+                                <option value="" selected>@SharedLocalizer["pleasechose"]</option>
+                                @foreach (var pos in Model.Poses)
+                                {
+                                    <option value="@pos.Id">@(string.Format("{0} ({1})", pos.CreditCardBankName, pos.Mode))</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <button id="search" class="btn btn-success col-md-1" name="Name">@SharedLocalizer["button.search"]</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.card-body -->
+            <div class="card-footer">
+                Arama sonuçlarının görüntülenmesi kısa bir süre alabilir. Lütfen "Ara" dedikten sonra bekleyin.
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table id="paymentprocess" class="display" style="width:100%">
+                            <caption>Banka Ödemeleri</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">@SharedLocalizer["datatables.payment.columns.companyname"]</th>
+                                    <th scope="col">Kullanıcı Adı</th>
+                                    <th scope="col">Ödeme Tipi</th>
+                                    <th scope="col">Banka Adı</th>
+                                    <th scope="col">Tarih</th>
+                                    <th scope="col">İşlemler</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="modal-payment-detail">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header card-header">
+                <h4 class="modal-title">Ödeme Detayı</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-payment-detail-data">
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default close" data-dismiss="modal">Kapat</button>
+                @*<button type="button" class="btn btn-primary" id="change-password-btn">Şifreyi Değiştir</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+@section FooterSection
+{
+    <script src="/plugins/select2/js/select2.full.min.js"></script>
+    <script src="/plugins/datatables2/datatables.min.js"></script>
+    <script src="/js/moment.min.js"></script>
+
+    <script type="text/javascript">
+
+        function openChangePasswordModal(id) {
+            var url = "/payments/detail/" + id;
+
+            let token = $('input[name="__RequestVerificationToken"]').val();
+            let headers = { "RequestVerificationToken": token };
+
+            $.ajax({
+                type: 'GET',
+                datatype: "json",
+                url: url,
+                headers: headers,
+                success: function (data) {
+                    $('#modal-payment-detail-data').html(data);
+
+                    $('#modal-payment-detail').modal('show');
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+
+            $('#searchBox').parent().slideUp();
+
+            $('#BankId').select2({
+                theme: 'bootstrap4'
+            });
+
+            $('#PaymentTypeId').select2({
+                theme: 'bootstrap4'
+            });
+
+            $('#PosId').select2({
+                theme: 'bootstrap4'
+            });
+
+            var url = "/payments/bank/list";
+
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            $("#search").click(function () {
+
+                url = "/payments/bank/list";
+
+                if ($("#Username").val() != null && $("#Username").val() != "") {
+                    url += "?Username=" + $("#Username").val();
+                }
+                else {
+                    url += "?Username=";
+                }
+
+                if ($("#CardHolder").val() != null && $("#CardHolder").val() != "") {
+                    url += "&CardHolder=" + $("#CardHolder").val();
+                }
+
+                if ($("#CardNumber").val() != null && $("#CardNumber").val() != "") {
+                    url += "&CardNumber=" + $("#CardNumber").val();
+                }
+
+                if ($("#BankId").val() != null && $("#BankId").val() != "") {
+                    url += "&BankId=" + $("#BankId").val();
+                }
+
+                if ($("#PosId").val() != null && $("#PosId").val() != "") {
+                    url += "&PosId=" + $("#PosId").val();
+                }
+
+                //console.clear();
+                //console.log(url);
+
+                tbl.ajax.url(url).load();
+                //console.log(url);
+            });
+
+
+            var tbl = $('#paymentprocess').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "pageLength": 25,
+                "ajax": {
+                    "url": url,
+                    "contentType": "application/x-www-form-urlencoded",
+                    "type": "POST",
+                    "data": { "__RequestVerificationToken": token }
+                },
+                "columns": [
+                    { "data": "Id", "name": "Id", "autoWidth": true },
+                    { "data": "StationName", "name": "StationId", "autoWidth": true },
+                    { "data": "UserName", "name": "UserName", "autoWidth": true },
+                    { "data": "PaymentTypeName", "name": "PaymentTypeId", "autoWidth": true },
+                    { "data": "BankName", "name": "BankId", "autoWidth": true },
+                    { "data": "TransDate", "name": "TransDate", "autoWidth": true },
+                    {
+                        'data': null,
+                        'render': function (data, type, row) {
+
+                            return '<a onclick="openChangePasswordModal(' + row.Id + ')" class="btn btn-outline-dark btn-sm"><em class="fa fa-info"></em> Detay</a>';
+
+                        },
+                        "orderable": false
+                    }
+                ],
+                columnDefs: [{
+                    targets: 5, render: function (data) {
+                        return moment(data).format('DD/MM/YYYY');
+                    }
+                }],
+                "language": {
+                    "url": "/js/datatables-tr.json"
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,222 @@
+﻿
+@{
+    ViewData["Title"] = "Roles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section HeaderSection
+{
+    <link href="/plugins/datatables2/datatables.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">Roller</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Anasayfa</a></li>
+                    <li class="breadcrumb-item active">Kullanıcılar</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="content">
+    @Html.AntiForgeryToken()
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <a class="btn btn-primary btn-block" href="/users/roles">
+                                    <em class="fas fa-users"></em> Roller
+                                </a>
+                            </div>
+                            <div class="col-md-3">
+                                <a class="btn btn-secondary btn-block" href="#" onclick="openCreateEditRole(0);">
+                                    <em class="fas fa-plus"></em> Rol Ekle
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <table id="roles" class="display" style="width:100%">
+                            <caption>Roller</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Adı</th>
+                                    <th scope="col">Sistem Adı</th>
+                                    <th scope="col">Tarih</th>
+                                    <th scope="col">Sistem Rolü</th>
+                                    <th scope="col">Düzenle</th>
+                                    <th scope="col">Sil</th>
+                                    <th scope="col">Yetkiler</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal fade" id="modal-create-update-role">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header card-header">
+                <h4 class="modal-title">Rol Ekle/Düzenle</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-create-update-role-data">
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default close" data-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary" id="create-update-btn">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section FooterSection
+{
+    <script src="/plugins/datatables2/datatables.min.js"></script>
+    <script src="/js/moment.min.js"></script>
+
+    <script type="text/javascript">
+
+        function deleteRole(id) {
+            Swal.fire({
+                title: 'Kaydı silerseniz bu role sahip tüm kullanıcıların bu roldeki yetkileri alınacaktır.<br /><br />Bu işlem geri alınamaz! Kaydı simek istediğinize emin misiniz?',
+                showDenyButton: false,
+                showCancelButton: true,
+                confirmButtonText: 'Evet, Sil',
+                cancelButtonText: 'İptal',
+            })
+                .then((willDelete) => {
+                    if (willDelete.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            datatype: "json",
+                            url: '/users/roles/delete-role',
+                            data: {
+                                Id: id,
+                                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (data) {
+                                if (data.success) {
+                                    swal.fire('Başarılı', 'Kayıt başarıyla silindi?', 'success');
+                                    $('#roles').DataTable().ajax.reload();
+                                }
+                                else {
+                                    swal.fire('Hata Oluştu!', 'İşlem sırasında hata oluştu?', 'warning');
+                                    return false;
+                                }
+                            }
+                        });
+                    } else {
+                        swal.fire("İşlem iptal edildi.");
+                    }
+                });
+        }
+
+        function openCreateEditRole(id) {
+            var url = "/users/roles/create-update?Id=" + id;
+
+            let token = $('input[name="__RequestVerificationToken"]').val();
+            let headers = { "RequestVerificationToken": token };
+
+            $.ajax({
+                type: 'GET',
+                datatype: "json",
+                url: url,
+                headers: headers,
+                success: function (data) {
+                    $('#modal-create-update-role-data').html(data);
+
+                    $('#modal-create-update-role').modal('show');
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert(xhr.responseText);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            var token = $('input[name="__RequestVerificationToken"]').val();
+            $('#roles').DataTable({
+                "processing": false,
+                "serverSide": false,
+                "pageLength": 50,
+                "ajax": {
+                    "url": "/users/roles-list",
+                    "type": "POST",
+                    "data": {
+                        __RequestVerificationToken: token
+                    }
+                },
+                "columns": [
+                    { "data": "Id", "name": "Id", "autoWidth": true },
+                    { "data": "Name", "name": "Name", "autoWidth": true },
+                    { "data": "SystemName", "name": "SystemName", "autoWidth": true },
+                    { "data": "Tarih", "name": "Tarih", "autoWidth": true },
+                    {
+                        "data": "IsSystemRole", "name": "IsSystemRole", "autoWidth": true,
+                        "render": function (data, type, row) {
+                            if (row.IsSystemRole == true) {
+                                return 'Evet'
+                            } else {
+                                return 'Hayır'
+                            }
+                        }
+                    },
+                    {
+                        'data': null,
+                        'render': function (data, type, row) {
+
+                            return '<a href="#roles" onclick="openCreateEditRole(' + row.Id + ')" class="btn btn-outline-success btn-sm"><em class="fa fa-edit"></em> Düzenle</a>';
+
+                        },
+                        "orderable": false
+                    },
+                    {
+                        'data': null,
+                        'render': function (data, type, row) {
+
+                            return '<a href="#roles" onclick="deleteRole(' + row.Id + ')" class="btn btn-outline-danger btn-sm"><em class="fa fa-check-square"></em> Sil</a>'
+                        },
+                        "orderable": false
+                    },
+                    {
+                        'data': null,
+                        'render': function (data, type, row) {
+                            return '<a href="/users/role-permissions?editRoleId=' + row.Id + '" class="btn btn-outline-primary btn-sm"><em class="fa fa-list-alt"></em> Yetkiler</a>';
+                        },
+                        "orderable": false
+                    }
+                ],
+                columnDefs: [{
+                    targets: 3, render: function (data) {
+                        return moment(data).format('DD/MM/YYYY');
+                    }
+                }],
+                "language": {
+                    "url": "/js/datatables-tr.json"
+                }
+            });
+        });
+    </script>
+}

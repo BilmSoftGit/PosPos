@@ -1,0 +1,106 @@
+﻿<style type="text/css">
+    .radio, .checkbox {
+        padding-left: 0 !important;
+    }
+</style>
+<div role="tabpanel" data-toggle="validator" class="tab-pane fade in active" id="card">
+    <form action="/PaymentTest/PayByCard" id="frmData" method="post">
+        <div class="info">
+            <div class="kartgobek">
+                <div id="solkartdiv" class="solkart">
+                    <div class="creditCardOwner">
+                        <input autocomplete="off" class="cardHolderName cardHolderNameNotFocused" id="CardholderName" maxlength="255" name="CardholderName" onblur="clickrecall(this,'Kart Sahibi')" onclick="clickclear(this, 'Kart Sahibi')" tabindex="5" title="Kart Sahibi" type="text" value="">
+                    </div>
+                    <div id="VisaOrMaster" class="creditCardType"></div>
+                    <div class="ValidDiv">
+                        <span class="validTitle">VALID THRU</span>
+                        <div>
+                            <select id="ExpireMonth" name="ExpireMonth" tabindex="6">
+                                <option value="" selected>Seçiniz</option>
+                                <option value="1">01</option>
+                                <option value="2">02</option>
+                                <option value="3">03</option>
+                                <option value="4">04</option>
+                                <option value="5">05</option>
+                                <option value="6">06</option>
+                                <option value="7">07</option>
+                                <option value="8">08</option>
+                                <option value="9">09</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                            </select>
+                        </div>
+                        <div>
+                            <select id="ExpireYear" name="ExpireYear" tabindex="7">
+                                <option value="" selected>Seçiniz</option>
+                                <option value="2021">2021</option>
+                                <option value="2022">2022</option>
+                                <option value="2023">2023</option>
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2028">2028</option>
+                                <option value="2029">2029</option>
+                                <option value="2030">2030</option>
+                            </select>
+                            <input id="CreditCardType" name="CreditCardType" type="hidden" value="">
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div>
+                        <ul id="card_field" class="creditCardNo">
+                            <li>
+                                <input class="form-control" autocomplete="off" id="CardNumber1" maxlength="4" name="CardNumber1" size="4" tabindex="1" type="text" value="">
+                                <script>document.getElementById("CardNumber1").focus();</script>
+                            </li>
+                            <li><input class="form-control" autocomplete="off" id="CardNumber2" maxlength="4" name="CardNumber2" size="4" tabindex="2" type="text" value=""></li>
+                            <li><input class="form-control" autocomplete="off" id="CardNumber3" maxlength="4" name="CardNumber3" size="4" tabindex="3" type="text" value=""></li>
+                            <li><input class="form-control" autocomplete="off" id="CardNumber4" maxlength="4" name="CardNumber4" size="4" tabindex="4" type="text" value=""></li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div id="sagkartdiv" class="sagkart">
+                    <div class="backCardContent">
+                        CVC2
+                        <input autocomplete="off" class="cvc2" id="CardCode" maxlength="4" name="CardCode" tabindex="8" type="text" value="">
+                    </div>
+                </div>
+            </div>
+
+            <div id="Tekcekim" class="dopaymentbox">
+                <div class="singleLineoption">
+                    <label>
+                        <input type="radio" class="radiobutton" name="Installment" value="1" tabindex="9" checked="checked"><span class="middlespan">Peşin
+                            @*@if (settings.FirstOrDefault(p => p.Key == "Single_Installment") != null)
+                            {
+                                @settings.FirstOrDefault(p => p.Key == "Single_Installment").Value
+                            }*@
+                        </span>
+                    </label>
+                </div>
+            </div>
+            @*<div class="checkBonusHolder" style="display: block;">
+                <strong>Banka Puanı Kullan</strong>
+                <div>
+                    Banka puanınızı sorgulayabilir ve kullanabilirsiniz
+                    <span id="CheckBonus" class="button-money-point">
+                        Puan Sorgula
+                    </span>
+                </div>
+            </div>*@
+            @*<div id="CreditCardMoneyPoint"></div>*@
+            <div id="taksitTablosu"></div>
+        </div>
+        <div class="buttons">
+            <p class="strike" style="float:left">
+                <strong class="price">100  TL</strong>
+            </p>
+            <div class="clearfix"></div>
+            <input id="btnPay" type="submit" name="nextstep" value="Ödeme Yap" class="button-1 payment-info-next-step-button">
+            <img src="/Content/images/busy.gif" style="display:none;float:left;margin-left:30px;margin-top:10px" alt="Please wait..." title="Please wait..." id="waitImage" height="22" width="22">
+        </div>
+    </form>
+</div>
